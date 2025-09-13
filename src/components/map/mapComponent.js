@@ -28,6 +28,10 @@ export default function MapComponent({ pins }) {
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);
 
   const handleSelectSearchResult = (loc) => {
+    if (loc == null) {
+      setTempMarker(null);
+      return;
+    }
     setTempMarker({
       id: loc.place_id,
       name: loc.name,
@@ -55,10 +59,19 @@ export default function MapComponent({ pins }) {
           />
           {/* position the search icon inside the input */}
           <button className="absolute right-3 top-3 " type="submit">
-            <Search size={18} className="text-gray-600" />
+            {!searchResults ? (
+              <Search size={18} className="text-gray-600" />
+            ) : (
+              <X
+                size={18}
+                className="text-gray-600"
+                onClick={() => handleSelectSearchResult(null)}
+              />
+            )}
           </button>
           {(isPending || searchResults) && <Divider className="mt-4" />}
           {isPending && <div className="w-full p-4">Loading...</div>}
+          {searchResults?.errors ?? null}
           {!isPending && searchResults && !searchResults?.errors && (
             <Listbox className="max-h-[600px] overflow-scroll">
               {searchResults.map((loc) => (
