@@ -61,7 +61,7 @@ export default function MapComponent({ pins }) {
     startTransition(async () => {
       const formdata = new FormData(e.currentTarget);
       const query = formdata.get("query");
-      if (!query) {
+      if (!query || !query.trim()) {
         setTempMarker(null);
         setSearchResults(null);
       } else {

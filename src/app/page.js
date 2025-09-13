@@ -4,7 +4,7 @@ export default async function Home() {
   const pins = await fetchMarkers();
   return (
     // add top padding so child margins don't collapse out of the green background
-    <div className="relative bg-green-50 py-32">
+    <div className="relative py-32">
       <MapComponent pins={pins} />
     </div>
   );

@@ -10,8 +10,10 @@ import Link from "next/link";
 export default function NavComponent() {
   return (
     <Navbar className="text-bold bg-green-100" isBordered shouldHideOnScroll>
-      <NavbarBrand className="text-3xl">MyTravel</NavbarBrand>
-      <NavbarContent className="text-2xl" justify="center">
+      <NavbarBrand className="text-3xl" as={Link} href="/">
+        MyTravel
+      </NavbarBrand>
+      <NavbarContent className="text-2xl gap-12" justify="center">
         <NavbarItem
           as={Link}
           href="/"
@@ -19,7 +21,7 @@ export default function NavComponent() {
           variant="shadow"
           className="text-green-900 text-2xl"
         >
-          Home
+          Search People
         </NavbarItem>
         <NavbarItem
           as={Link}
