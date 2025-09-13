@@ -29,7 +29,7 @@ function CenterMap({ coords }) {
 
   useEffect(() => {
     if (coords) {
-      map.panTo(coords); // or map.panTo(coords)
+      map.panTo(coords);
     }
   }, [coords, map]);
 
@@ -55,11 +55,7 @@ export default function LeafletMap({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* <Marker position={latlng} icon={icon}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker> */}
+
       {(tempMarker ? [...markers, tempMarker] : markers).map((marker) => (
         <Marker key={marker.id} position={marker.latlon} icon={icon}>
           <Popup className="max-w-40 space-y-1">
