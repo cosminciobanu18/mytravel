@@ -13,21 +13,31 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
 import { searchLocation } from "@/lib/actions/actions";
 
 export default function MapComponent({ pins }) {
-  // const [searchResults, setSearchResults] = useState(true);
-  const [searchResults, action, isPending] = useActionState(
-    searchLocation,
-    null
-  );
+  const [error, setError] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
   const [markers, setMarkers] = useState(pins);
   const [tempMarker, setTempMarker] = useState(null);
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);
+  const [isPending, startTransition] = useTransition();
 
-  const handleSelectSearchResult = (loc) => {
+  const fetchSearchInput = async (query) => {
+    const response = await fetch(`/api/search/${query}`);
+    if (!response.ok) {
+      setError(response.error);
+      setSearchResults(null);
+      return;
+    }
+    const result = await response.json();
+    setError(null);
+    setSearchResults(result);
+  };
+
+  const handleClickSearchResult = (loc) => {
     if (loc == null) {
       setTempMarker(null);
       return;
@@ -45,10 +55,32 @@ export default function MapComponent({ pins }) {
     setViewCenter([loc.lat, loc.lon]);
   };
 
+  const handleSubmit = async (e) => {
+    // prevent default synchronously to avoid race conditions when other buttons are clicked
+    e.preventDefault();
+    startTransition(async () => {
+      const formdata = new FormData(e.currentTarget);
+      const query = formdata.get("query");
+      if (!query) {
+        setTempMarker(null);
+        setSearchResults(null);
+      } else {
+        await fetchSearchInput(query);
+      }
+    });
+  };
+
+  const handleClearSearch = (e) => {
+    e.preventDefault();
+    setTempMarker(null);
+    setSearchResults(null);
+    setError(null);
+  };
+
   return (
     <div className="max-w-7xl relative mx-auto">
       <div className="absolute top-6 left-6 w-60 z-[10000] bg-white p-3">
-        <form className="relative" action={action}>
+        <form className="relative" onSubmit={handleSubmit}>
           <Input
             type="text"
             variant="bordered"
@@ -58,27 +90,31 @@ export default function MapComponent({ pins }) {
             name="query"
           />
           {/* position the search icon inside the input */}
-          <button className="absolute right-3 top-3 " type="submit">
-            {!searchResults ? (
+          {!searchResults ? (
+            <button className="absolute right-3 top-3" type="submit">
               <Search size={18} className="text-gray-600" />
-            ) : (
-              <X
-                size={18}
-                className="text-gray-600"
-                onClick={() => handleSelectSearchResult(null)}
-              />
-            )}
-          </button>
-          {(isPending || searchResults) && <Divider className="mt-4" />}
+            </button>
+          ) : (
+            <button
+              className="absolute right-3 top-3"
+              onClick={handleClearSearch}
+              type="reset"
+            >
+              <X size={18} className="text-gray-600" />
+            </button>
+          )}
+          {(isPending || searchResults || error) && (
+            <Divider className="mt-4" />
+          )}
           {isPending && <div className="w-full p-4">Loading...</div>}
-          {searchResults?.errors ?? null}
-          {!isPending && searchResults && !searchResults?.errors && (
+          {error ?? null}
+          {!isPending && searchResults && !error && (
             <Listbox className="max-h-[600px] overflow-scroll">
               {searchResults.map((loc) => (
                 <ListboxItem
                   className="mt-4"
                   key={loc.place_id}
-                  onPress={() => handleSelectSearchResult(loc)}
+                  onPress={() => handleClickSearchResult(loc)}
                 >
                   <h4 className="text-lg font-bold">{loc.name}</h4>
                   <h6 className="text-md font-semibold">
