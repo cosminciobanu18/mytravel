@@ -11,7 +11,12 @@ export async function fetchMarkers() {
       city: "Iași",
       country: "Romania",
 
-      tags: ["black"],
+      tags: [
+        { color: "black", name: "test" },
+        { color: "gold", name: "visited" },
+        { color: "red", name: "important" },
+        { color: "green", name: "Iasi" },
+      ],
     },
   ];
 }
