@@ -43,20 +43,21 @@ export default function MapComponent({ pins }) {
       return;
     }
     setTempMarker({
-      id: loc.place_id,
-      name: loc.name,
-      address: loc.display_name,
-      type: loc.type,
-      latlon: [loc.lat, loc.lon],
-      country: loc.address.country,
-      city: loc.address?.city || loc.address?.town || loc.address?.village,
+      location: {
+        place_id: loc.place_id,
+        name: loc.name,
+        address: loc.display_name,
+        type: loc.type,
+        latlon: [loc.lat, loc.lon],
+        country: loc.address.country,
+        city: loc.address?.city || loc.address?.town || loc.address?.village,
+      },
       tags: [],
     });
     setViewCenter([loc.lat, loc.lon]);
   };
 
   const handleSubmit = async (e) => {
-    // prevent default synchronously to avoid race conditions when other buttons are clicked
     e.preventDefault();
     startTransition(async () => {
       const formdata = new FormData(e.currentTarget);

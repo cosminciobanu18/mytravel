@@ -1,3 +1,4 @@
+"use client";
 import {
   Button,
   Navbar,
@@ -6,8 +7,11 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@heroui/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 export default function NavComponent() {
+  const { data: session } = useSession();
+  console.log(session);
   return (
     <Navbar className="text-bold bg-green-100" isBordered shouldHideOnScroll>
       <NavbarBrand className="text-3xl" as={Link} href="/">
@@ -34,7 +38,13 @@ export default function NavComponent() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <Avatar>A</Avatar>
+        {!session ? (
+          <Button onPress={signIn} className="bg-green-800">
+            Sign Up
+          </Button>
+        ) : (
+          <Avatar>A</Avatar>
+        )}
       </NavbarContent>
     </Navbar>
   );

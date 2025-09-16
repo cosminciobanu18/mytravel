@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
 import NavComponent from "@/components/navComponent";
+import AuthProvider from "./providers/authProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +25,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-green-50`}
       >
-        <HeroUIProvider>
-          <NavComponent />
-          {children}
-        </HeroUIProvider>
+        <AuthProvider>
+          <HeroUIProvider>
+            <NavComponent />
+            {children}
+          </HeroUIProvider>
+        </AuthProvider>
       </body>
     </html>
   );
