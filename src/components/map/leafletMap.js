@@ -9,13 +9,14 @@ import {
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, useTransition, useState } from "react";
 import { Button } from "@heroui/react";
 import { markerColorsArray } from "@/lib/helpers";
-import { CircleSmall } from "lucide-react";
+import { BookmarkPlus, CircleSmall, Edit, Save } from "lucide-react";
 import { color } from "framer-motion";
 import { createMarkup } from "@/lib/actions/actions";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -55,10 +56,13 @@ function CenterMap({ coords }) {
 }
 export default function LeafletMap({
   markers,
+  setMarkers,
   tempMarker,
   setTempMarker,
   viewCenter,
 }) {
+  const [successfulSave, setSuccessfulSave] = useState(null);
+  const [isPending, startTransition] = useTransition();
   const { data: session } = useSession();
   console.log(session);
   const latlng = [47.151726, 27.587914];
@@ -84,13 +88,14 @@ export default function LeafletMap({
           >
             <Popup className="max-w-40 space-y-1 relative">
               <h5 className="text-lg font-bold ">{location.name}</h5>
-              <span className="text-md">
+              <span className="text-lg">
                 {location.city}, {location.country}
               </span>
-              <hr className="my-1" />
+              <hr className="my-2" />
               <span className="font-semibold pt-2">Tags:</span>
               <br />
               <div className="flex flex-wrap gap-x-1 gap-y-1 mt-1">
+                {tags.length === 0 && <span>no tags</span>}
                 {tags?.slice(0, 3).map((tag, idx) => {
                   const [{ colorInside, colorOutside }] =
                     markerColorsArray.filter((c) => c.name === tag.color);
@@ -119,19 +124,49 @@ export default function LeafletMap({
               </div>
               <Button
                 size="sm"
-                className="mt-2 border-green-900"
-                variant="bordered"
+                className="mt-4 w-full border-green-900 text-green-900 bg-green-100 border-1 mx-auto font-bold"
+                variant="solid"
                 onPress={async () => {
                   if (!session) {
-                    console.log("CANNOT ADD TO DB IF NOT LOGGED IN");
+                    // console.log("CANNOT ADD TO DB IF NOT LOGGED IN");
+                    toast.error("You have to be logged in to save markups!", {
+                      position: "top-center",
+                    });
                     return;
                   }
-                  await createMarkup(tempMarker);
-                  setTempMarker(null);
+                  if (location.place_id === tempMarker?.location?.place_id) {
+                    startTransition(async () => {
+                      const res = await createMarkup(tempMarker);
+                      if (!res.error) {
+                        setMarkers((prev) => [...prev, tempMarker]);
+                        setTempMarker(null);
+                        setSuccessfulSave("successfully saved");
+                        setTimeout(() => setSuccessfulSave(null), 3000);
+                      } else {
+                        setSuccessfulSave(res.error);
+                        console.log(res);
+                        setTimeout(() => setSuccessfulSave(null), 5000);
+                      }
+                    });
+                  }
                 }}
               >
-                {tags.length === 0 ? "Add tag" : "See all tags"}
+                {/* {tags.length === 0 ? "Add tag" : "See all tags"} */}
+                {location.place_id === tempMarker?.location?.place_id ? (
+                  <>
+                    Save <BookmarkPlus size={18} />
+                  </>
+                ) : (
+                  <>
+                    Customize
+                    <Edit size={18} />
+                  </>
+                )}
               </Button>
+              {isPending && <span className="">saving...</span>}
+              {successfulSave !== null && (
+                <span className="text-green-600">{successfulSave}</span>
+              )}
             </Popup>
           </Marker>
         )

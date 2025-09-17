@@ -3,6 +3,8 @@ const LocationSchema = new mongoose.Schema({
   place_id: {
     type: Number,
     required: true,
+    index: true,
+    unique: true,
   },
   name: {
     type: String,

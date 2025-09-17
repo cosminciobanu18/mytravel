@@ -37,16 +37,26 @@ const options = {
       );
 
       user.id = userFromDB._id.toString();
+      console.log("signIn", { user });
       return true;
     },
-    async jwt({ token, user }) {
-      if (user) token.id = user.id;
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.id = token.id;
-      return session;
-    },
+    // ,
+    // async jwt({ token, user }) {
+    //   console.log("jwt", { token }, { user });
+    //   if (user) token.id = user.id;
+    //   return token;
+    // },
+    // async session({ session, token }) {
+    //   console.log("Session", { session }, { token });
+    //   session.user.id = token.id;
+    //   return {
+    //     ...session,
+    //     user: {
+    //       ...session.user,
+    //       id: token.id,
+    //     },
+    //   };
+    // },
   },
   pages: {
     signIn: "/signin",

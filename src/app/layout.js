@@ -3,6 +3,7 @@ import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
 import NavComponent from "@/components/navComponent";
 import AuthProvider from "./providers/authProvider";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
           <HeroUIProvider>
             <NavComponent />
             {children}
+            <ToastContainer />
           </HeroUIProvider>
         </AuthProvider>
       </body>
