@@ -60,6 +60,9 @@ export default function LeafletMap({
   tempMarker,
   setTempMarker,
   viewCenter,
+  setIsModalOpen,
+  setModalLocation,
+  setModalTags,
 }) {
   const [successfulSave, setSuccessfulSave] = useState(null);
   const [isPending, startTransition] = useTransition();
@@ -122,19 +125,19 @@ export default function LeafletMap({
                   </div>
                 )}
               </div>
-              <Button
-                size="sm"
-                className="mt-4 w-full border-green-900 text-green-900 bg-green-100 border-1 mx-auto font-bold"
-                variant="solid"
-                onPress={async () => {
-                  if (!session) {
-                    // console.log("CANNOT ADD TO DB IF NOT LOGGED IN");
-                    toast.error("You have to be logged in to save markups!", {
-                      position: "top-center",
-                    });
-                    return;
-                  }
-                  if (location.place_id === tempMarker?.location?.place_id) {
+              {location.place_id === tempMarker?.location?.place_id ? (
+                <Button
+                  size="sm"
+                  className="mt-4 w-full border-green-900 text-green-900 bg-green-100 border-1 mx-auto font-bold"
+                  variant="solid"
+                  onPress={async () => {
+                    if (!session) {
+                      // console.log("CANNOT ADD TO DB IF NOT LOGGED IN");
+                      toast.error("You have to be logged in to save markups!", {
+                        position: "top-center",
+                      });
+                      return;
+                    }
                     startTransition(async () => {
                       const res = await createMarkup(tempMarker);
                       if (!res.error) {
@@ -148,21 +151,31 @@ export default function LeafletMap({
                         setTimeout(() => setSuccessfulSave(null), 5000);
                       }
                     });
-                  }
-                }}
-              >
-                {/* {tags.length === 0 ? "Add tag" : "See all tags"} */}
-                {location.place_id === tempMarker?.location?.place_id ? (
+                  }}
+                >
+                  {/* {tags.length === 0 ? "Add tag" : "See all tags"} */}
+
                   <>
                     Save <BookmarkPlus size={18} />
                   </>
-                ) : (
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  className="mt-4 w-full border-green-900 text-green-900 bg-green-100 border-1 mx-auto font-bold"
+                  variant="solid"
+                  onPress={() => {
+                    setIsModalOpen(true);
+                    setModalLocation(location);
+                    setModalTags(tags);
+                  }}
+                >
                   <>
                     Customize
                     <Edit size={18} />
                   </>
-                )}
-              </Button>
+                </Button>
+              )}
               {isPending && <span className="">saving...</span>}
               {successfulSave !== null && (
                 <span className="text-green-600">{successfulSave}</span>

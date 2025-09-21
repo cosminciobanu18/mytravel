@@ -36,6 +36,7 @@ export async function createMarkup(markup) {
 }
 
 export async function fetchMarkers() {
+  await DBConnect();
   const session = await getServerSession();
   if (!session) return [];
   const user = await User.findOne({ email: session?.user?.email });
