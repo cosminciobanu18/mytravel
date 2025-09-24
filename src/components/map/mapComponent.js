@@ -15,14 +15,19 @@ import {
 } from "@heroui/react";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
-import { searchLocation } from "@/lib/actions/actions";
+import {
+  addTagToMarkupId,
+  createTag,
+  searchLocation,
+} from "@/lib/actions/actions";
 import MarkupEditModal from "@/components/markupModal/markupEditModal";
 
-export default function MapComponent({ pins }) {
+export default function MapComponent({ pins, tags }) {
   const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [markers, setMarkers] = useState(pins);
   console.log(markers);
+  const [allTags, setAllTags] = useState(tags);
   const [tempMarker, setTempMarker] = useState(null);
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);
   const [isPending, startTransition] = useTransition();
@@ -85,6 +90,42 @@ export default function MapComponent({ pins }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalLocation, setModalLocation] = useState(null);
   const [modalTags, setModalTags] = useState([]);
+  const [modalMarkupId, setModalMarkupId] = useState(null);
+
+  const addTagToState = (newTag) => {
+    setModalTags((prev) => [...prev, newTag]);
+    setMarkers((prev) =>
+      prev.map((mark) => {
+        if (mark._id === modalMarkupId)
+          return {
+            ...mark,
+            tags: [...mark.tags, newTag],
+          };
+        else return mark;
+      })
+    );
+  };
+
+  const handleAddExistingTag = async (tag) => {
+    const tagsBackup = modalTags;
+    const markersBackup = markers;
+    addTagToState(tag);
+    try {
+      const modifiedMarkup = await addTagToMarkupId(tag, modalMarkupId);
+      if (modifiedMarkup?.error) throw modifiedMarkup.error;
+    } catch (error) {
+      console.warn("Error adding existing tag to markup", error);
+      setMarkers(markersBackup);
+      setModalTags(tagsBackup);
+    }
+  };
+
+  const handleAddNewTag = async (tag) => {
+    const newTag = await createTag(tag);
+    setAllTags((prev) => [...prev, newTag]);
+    await handleAddExistingTag(newTag);
+  };
+
   return (
     <>
       <MarkupEditModal
@@ -92,6 +133,9 @@ export default function MapComponent({ pins }) {
         location={modalLocation}
         existingTags={modalTags}
         setIsModalOpen={setIsModalOpen}
+        handleAddExistingTag={handleAddExistingTag}
+        handleAddNewTag={handleAddNewTag}
+        allTags={allTags}
       />
       <div className="max-w-7xl relative mx-auto">
         <div className="absolute top-6 left-6 w-60 z-[10000] bg-white p-3">
@@ -156,6 +200,7 @@ export default function MapComponent({ pins }) {
             setModalLocation={setModalLocation}
             setModalTags={setModalTags}
             setIsModalOpen={setIsModalOpen}
+            setModalMarkupId={setModalMarkupId}
           />
         </div>
       </div>

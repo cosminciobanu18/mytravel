@@ -63,6 +63,7 @@ export default function LeafletMap({
   setIsModalOpen,
   setModalLocation,
   setModalTags,
+  setModalMarkupId,
 }) {
   const [successfulSave, setSuccessfulSave] = useState(null);
   const [isPending, startTransition] = useTransition();
@@ -83,7 +84,7 @@ export default function LeafletMap({
       />
 
       {(tempMarker ? [...markers, tempMarker] : markers).map(
-        ({ location, tags }) => (
+        ({ _id, location, tags }) => (
           <Marker
             key={location.place_id}
             position={location.latlon}
@@ -101,7 +102,7 @@ export default function LeafletMap({
                 {tags.length === 0 && <span>no tags</span>}
                 {tags?.slice(0, 3).map((tag, idx) => {
                   const [{ colorInside, colorOutside }] =
-                    markerColorsArray.filter((c) => c.name === tag.color);
+                    markerColorsArray.filter((c) => c.name === tag?.color);
                   return (
                     <div
                       className="inline-block border-gray-800 rounded-md border-small p-1 py-0.5"
@@ -141,7 +142,7 @@ export default function LeafletMap({
                     startTransition(async () => {
                       const res = await createMarkup(tempMarker);
                       if (!res.error) {
-                        setMarkers((prev) => [...prev, tempMarker]);
+                        setMarkers((prev) => [...prev, res.populatedMarkup]);
                         setTempMarker(null);
                         setSuccessfulSave("successfully saved");
                         setTimeout(() => setSuccessfulSave(null), 3000);
@@ -153,8 +154,6 @@ export default function LeafletMap({
                     });
                   }}
                 >
-                  {/* {tags.length === 0 ? "Add tag" : "See all tags"} */}
-
                   <>
                     Save <BookmarkPlus size={18} />
                   </>
@@ -168,6 +167,7 @@ export default function LeafletMap({
                     setIsModalOpen(true);
                     setModalLocation(location);
                     setModalTags(tags);
+                    setModalMarkupId(_id);
                   }}
                 >
                   <>

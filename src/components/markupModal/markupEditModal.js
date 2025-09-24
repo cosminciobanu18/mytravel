@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { CircleSmall, X } from "lucide-react";
-import { Button, Divider, ListboxItem, Listbox, Chip } from "@heroui/react";
+import { CircleSmall, X, ArrowUpCircle } from "lucide-react";
+import { Divider, Chip } from "@heroui/react";
 import ReactDOM from "react-dom";
 import { markerColorsArray } from "@/lib/helpers";
 import GptModal from "./gptModal";
@@ -9,31 +9,14 @@ export default function MarkupEditModal({
   isOpen,
   setIsModalOpen,
   onDelete,
-  //   existingTags,
+  existingTags,
   location,
+  handleAddExistingTag,
+  handleAddNewTag,
+  allTags,
 }) {
   if (!isOpen) return null;
-  const [tags, setTags] = useState([
-    //vom inlocui cu fetchAllTags
-    { _id: 1, color: "red", name: "Important" },
-    { _id: 2, color: "blue", name: "Albastrea" },
-    { _id: 3, color: "gold", name: "Smecherie" },
-    { _id: 4, color: "red", name: "KFC" },
-  ]);
-  const [existingTags, setExistingTags] = useState([
-    //vor fi cele date ca parametru acestei componente MarkupEditModal
-    { _id: 3, color: "gold", name: "Smecherie" },
-    { _id: 4, color: "red", name: "KFC" },
-  ]);
   const ref = useRef();
-
-  //   useEffect(() => {
-  //     const handleClick = (e) => {
-  //       if (!ref.current.contains(e.target)) {
-  //         setIsModalOpen(false);
-  //       }
-  //     };
-  //   });
 
   return ReactDOM.createPortal(
     <>
@@ -42,9 +25,7 @@ export default function MarkupEditModal({
           isOpen ? "" : "hidden"
         }`}
         onClick={(e) => {
-          //   if (!ref.current.contains(e.target)) {
           setIsModalOpen(false);
-          //   }
         }}
       ></div>
       <div className="fixed flex items-center justify-center border-green-400 border-2 backdrop-blur-sm bg-green-50/90 w-[600px] min-h-[400px] z-[10002] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
@@ -75,27 +56,37 @@ export default function MarkupEditModal({
             <div className="space-y-4 mt-4">
               {/* Tag List */}
               <div className="flex flex-wrap gap-2 items-center">
-                {tags.map((tag) => (
-                  <Chip
-                    key={tag._id}
-                    onClose={() => deleteTag(tag.id)}
-                    className="px-2 py-1"
-                    startContent={
-                      <span
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: tag.color }}
-                      />
-                    }
-                  >
-                    {tag.name}
-                  </Chip>
-                ))}
+                {existingTags?.map((tag) => {
+                  console.log({ existingTags });
+                  return (
+                    <Chip
+                      key={tag._id}
+                      onClose={() => deleteTag(tag._id)}
+                      className="px-2 py-1"
+                      startContent={
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: tag.color }}
+                        />
+                      }
+                    >
+                      <div className="flex">
+                        <span className="inline">{tag.name}</span>
+                        <button className="inline ml-1">
+                          <ArrowUpCircle size={18} fill="#6FCFEE" />
+                        </button>
+                      </div>
+                    </Chip>
+                  );
+                })}
               </div>
             </div>
             <AddNewTagComponent
-              tags={tags}
+              allTags={allTags}
               locationId={location._id}
               existingTags={existingTags}
+              handleAddExistingTag={handleAddExistingTag}
+              handleAddNewTag={handleAddNewTag}
             />
           </div>
         </div>

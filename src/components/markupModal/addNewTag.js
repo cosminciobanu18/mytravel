@@ -1,31 +1,51 @@
 "use client";
 
 import { CircleSmall } from "lucide-react";
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useTransition } from "react";
 import { markerColorsArray } from "@/lib/helpers";
 import { Button, Select, SelectItem } from "@heroui/react";
 
-export default function AddNewTagComponent({ tags, existingTags }) {
+export default function AddNewTagComponent({
+  allTags,
+  existingTags,
+  handleAddExistingTag,
+  handleAddNewTag,
+}) {
   const [query, setQuery] = useState("");
   const [tagColor, setTagColor] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const formRef = useRef();
   console.log({ isCreating });
+  const [isPendingE, startTransitionE] = useTransition();
+  const [isPendingC, startTransitionC] = useTransition();
 
   const filtered = useMemo(() => {
     if (!query) return [];
-    return tags.filter((tag) =>
+    return allTags.filter((tag) =>
       tag.name.toLowerCase().startsWith(query.toLowerCase())
     );
   }, [query]);
 
-  const handleSelect = (tag) => {
+  const handleSelect = async (tag) => {
     alert("Selected");
-    setQuery(tag.name);
+    setQuery("");
     setIsFocused(false);
     //daca markupul nu are deja tagul selectat, il adaugam la tagurile markupului
-    //adica if !existingTags.contains(tag)
+    //adica if !existingTags.contains(await tag.saveToDb() cand e nou || tag cand exista) =>dar el exista
+    startTransitionE(async () => {
+      await handleAddExistingTag(tag);
+    });
+  };
+
+  const handleCreateNewTag = async ({ name, color }) => {
+    //inca nu l am atribuit la buton
+    startTransitionC(async () => {
+      await handleAddNewTag({ name, color });
+      setIsCreating(false);
+      setIsFocused(false);
+      setQuery("");
+    });
   };
 
   useEffect(() => {
@@ -49,7 +69,7 @@ export default function AddNewTagComponent({ tags, existingTags }) {
         className="w-full bg-gray-300 rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Add tag..."
       />
-
+      {isPendingC && <span>Creating tag...</span>}
       {/* Dropdown */}
       {isFocused && (
         <>
@@ -59,45 +79,55 @@ export default function AddNewTagComponent({ tags, existingTags }) {
             onFocus={() => setIsFocused(true)}
           >
             {!isCreating ? (
-              <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
+              <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto ">
                 <>
                   {filtered.length > 0 &&
                     filtered.map((tag) => {
                       const [{ colorInside, colorOutside }] =
                         markerColorsArray.filter((c) => c.name === tag.color);
+                      const isDisabled = existingTags.some(
+                        (existingTag) => existingTag.name === tag.name
+                      );
                       return (
                         <li
                           key={tag._id}
                           // onClick={() => handleSelect(tag)} nu e bun
-                          onClick={() => {
-                            handleSelect(tag);
-                          }}
-                          className="cursor-pointer px-3 py-2 hover:bg-blue-100"
                         >
-                          <CircleSmall
-                            size={12}
-                            color={colorOutside}
-                            fill={colorInside}
-                            className="inline mr-2"
-                          />
-                          {tag.name}
+                          <button
+                            onClick={() => {
+                              handleSelect(tag);
+                            }}
+                            className={`h-full w-full left-0 px-3 py-2 text-start ${
+                              !isDisabled && "hover:bg-blue-100"
+                            }`}
+                            disabled={isDisabled}
+                          >
+                            <CircleSmall
+                              size={12}
+                              color={colorOutside}
+                              fill={colorInside}
+                              className="inline mr-2"
+                            />
+                            {tag.name}
+                          </button>
                         </li>
                       );
                     })}
 
                   <li className="cursor-pointer px-3 py-2 hover:bg-blue-100">
-                    <button
-                      // onMouseDown={(e) => {
-                      //   e.preventDefault();
-                      //   setIsCreating(true);
-                      // }}
-                      onClick={() => {
-                        setIsCreating(true);
-                        setIsFocused(true);
-                      }}
-                    >
-                      + Create new tag
-                    </button>
+                    {!isPendingE ? (
+                      <button
+                        // }}
+                        onClick={() => {
+                          setIsCreating(true);
+                          setIsFocused(true);
+                        }}
+                      >
+                        + Create new tag
+                      </button>
+                    ) : (
+                      <span>Loading...</span>
+                    )}
                   </li>
                 </>
               </ul>
@@ -158,10 +188,11 @@ export default function AddNewTagComponent({ tags, existingTags }) {
                     Cancel
                   </Button>
                   <Button
-                    onPress={() => {
+                    onPress={async () => {
                       const tagName = query;
                       const color = tagColor.currentKey;
                       console.log(tagName, color);
+                      await handleCreateNewTag({ name: tagName, color });
                     }}
                     className="inline"
                     size="sm"
