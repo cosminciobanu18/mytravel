@@ -4,23 +4,17 @@ const LeafletMap = dynamic(() => import("@/components/map/leafletMap"), {
   ssr: false,
 });
 
-import {
-  Button,
-  Divider,
-  Input,
-  Listbox,
-  ListboxItem,
-  Select,
-  SelectItem,
-} from "@heroui/react";
+import { Divider, Input, Listbox, ListboxItem } from "@heroui/react";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
 import {
   addTagToMarkupId,
   createTag,
   searchLocation,
+  deleteTagFromMarkupId,
 } from "@/lib/actions/actions";
 import MarkupEditModal from "@/components/markupModal/markupEditModal";
+import { toast } from "react-toastify";
 
 export default function MapComponent({ pins, tags }) {
   const [error, setError] = useState(null);
@@ -126,6 +120,29 @@ export default function MapComponent({ pins, tags }) {
     await handleAddExistingTag(newTag);
   };
 
+  const handleDeleteTag = async (tagId) => {
+    const markersBackup = markers;
+    const tagsBackup = modalTags;
+    setModalTags((prev) => {
+      const newModalTags = prev.filter((t) => t._id !== tagId);
+      setMarkers((prev) =>
+        prev.map((mark) =>
+          mark._id === modalMarkupId ? { ...mark, tags: newModalTags } : mark
+        )
+      );
+      return newModalTags;
+    });
+    try {
+      await deleteTagFromMarkupId(tagId, modalMarkupId);
+      toast.success;
+    } catch (e) {
+      setMarkers(markersBackup);
+      setModalTags(tagsBackup);
+      toast.error("Error deleting tag", { position: "bottom-right" });
+      console.warn("Error deleting tag", e);
+    }
+  };
+
   return (
     <>
       <MarkupEditModal
@@ -136,6 +153,7 @@ export default function MapComponent({ pins, tags }) {
         handleAddExistingTag={handleAddExistingTag}
         handleAddNewTag={handleAddNewTag}
         allTags={allTags}
+        handleDeleteTag={handleDeleteTag}
       />
       <div className="max-w-7xl relative mx-auto">
         <div className="absolute top-6 left-6 w-60 z-[10000] bg-white p-3">

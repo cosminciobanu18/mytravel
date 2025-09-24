@@ -12,7 +12,7 @@ import L from "leaflet";
 import { useEffect, useTransition, useState } from "react";
 import { Button } from "@heroui/react";
 import { markerColorsArray } from "@/lib/helpers";
-import { BookmarkPlus, CircleSmall, Edit, Save } from "lucide-react";
+import { BookmarkPlus, CircleSmall, Edit } from "lucide-react";
 import { color } from "framer-motion";
 import { createMarkup } from "@/lib/actions/actions";
 import { useSession } from "next-auth/react";

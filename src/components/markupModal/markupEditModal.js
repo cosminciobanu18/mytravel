@@ -8,7 +8,7 @@ import AddNewTagComponent from "./addNewTag";
 export default function MarkupEditModal({
   isOpen,
   setIsModalOpen,
-  onDelete,
+  handleDeleteTag,
   existingTags,
   location,
   handleAddExistingTag,
@@ -61,7 +61,7 @@ export default function MarkupEditModal({
                   return (
                     <Chip
                       key={tag._id}
-                      onClose={() => deleteTag(tag._id)}
+                      onClose={() => handleDeleteTag(tag._id)}
                       className="px-2 py-1"
                       startContent={
                         <span

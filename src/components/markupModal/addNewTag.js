@@ -1,5 +1,3 @@
-"use client";
-
 import { CircleSmall } from "lucide-react";
 import { useState, useMemo, useRef, useEffect, useTransition } from "react";
 import { markerColorsArray } from "@/lib/helpers";
@@ -28,7 +26,6 @@ export default function AddNewTagComponent({
   }, [query]);
 
   const handleSelect = async (tag) => {
-    alert("Selected");
     setQuery("");
     setIsFocused(false);
     //daca markupul nu are deja tagul selectat, il adaugam la tagurile markupului
@@ -49,9 +46,11 @@ export default function AddNewTagComponent({
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => {
+    const f = (e) => {
       if (!formRef?.current?.contains(e.target)) setIsFocused(false);
-    });
+    };
+    document.addEventListener("mousedown", f);
+    return () => document.removeEventListener("mousedown", f);
   });
 
   return (
@@ -73,11 +72,7 @@ export default function AddNewTagComponent({
       {/* Dropdown */}
       {isFocused && (
         <>
-          <div
-            tabIndex={-1}
-            // onBlur={() => setIsFocused(false)}
-            onFocus={() => setIsFocused(true)}
-          >
+          <div tabIndex={-1} onFocus={() => setIsFocused(true)}>
             {!isCreating ? (
               <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto ">
                 <>

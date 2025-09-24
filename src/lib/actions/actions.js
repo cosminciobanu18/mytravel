@@ -97,3 +97,20 @@ export async function addTagToMarkupId(tag, markupId) {
     return { error: e.message };
   }
 }
+
+export async function deleteTagFromMarkupId(tagId, markupId) {
+  try {
+    await DBConnect();
+    const session = await getServerSession();
+    if (!session) return;
+    const markup = await Markup.findById(markupId).populate("tags");
+    markup.tags.splice(
+      markup.tags.findIndex((t) => t._id.toString() === tagId),
+      1
+    );
+    markup.save();
+    return {};
+  } catch (error) {
+    throw { error };
+  }
+}
