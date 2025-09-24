@@ -47,11 +47,9 @@ export default function GptModal() {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Tags</h2>
-
+    <div className="space-y-4 mt-4">
       {/* Tag List */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 items-center">
         {tags.map((tag) => (
           <Chip
             key={tag.id}
@@ -67,16 +65,21 @@ export default function GptModal() {
             {tag.name}
           </Chip>
         ))}
+        {/* <Button
+          className="mx-auto font-semibold"
+          color="default"
+          variant="shadow"
+          onPress={() => setIsOpen(true)}
+        >
+          + Add Tag
+        </Button> */}
       </div>
 
       {/* Add Tag Button */}
-      <Button color="primary" onPress={() => setIsOpen(true)}>
-        + Add Tag
-      </Button>
 
       {/* Modal for Adding Tag */}
-      <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
-        <ModalContent className="z-[100006]">
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen} className="z-[100006]">
+        <ModalContent>
           <ModalHeader>Add a Tag</ModalHeader>
           <ModalBody className="space-y-4">
             <Input

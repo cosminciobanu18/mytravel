@@ -48,6 +48,10 @@ export async function fetchMarkers() {
   return markups ? JSON.parse(JSON.stringify(markups)) : [];
 }
 
+export async function fetchAllTags() {
+  //returneaza toate tag urile ca sa poata fi folosite in select-ul de cauta in tag uri
+}
+
 // export async function fetchMarkers() {
 //   return [
 //     {

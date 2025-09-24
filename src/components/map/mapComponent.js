@@ -22,6 +22,7 @@ export default function MapComponent({ pins }) {
   const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [markers, setMarkers] = useState(pins);
+  console.log(markers);
   const [tempMarker, setTempMarker] = useState(null);
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);
   const [isPending, startTransition] = useTransition();
@@ -89,7 +90,7 @@ export default function MapComponent({ pins }) {
       <MarkupEditModal
         isOpen={isModalOpen}
         location={modalLocation}
-        tags={modalTags}
+        existingTags={modalTags}
         setIsModalOpen={setIsModalOpen}
       />
       <div className="max-w-7xl relative mx-auto">

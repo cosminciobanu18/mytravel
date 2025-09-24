@@ -1,21 +1,29 @@
 import { useRef, useState } from "react";
 import { CircleSmall, X } from "lucide-react";
-import { Button, Divider, ListboxItem, Listbox } from "@heroui/react";
+import { Button, Divider, ListboxItem, Listbox, Chip } from "@heroui/react";
 import ReactDOM from "react-dom";
 import { markerColorsArray } from "@/lib/helpers";
+import GptModal from "./gptModal";
+import AddNewTagComponent from "./addNewTag";
 export default function MarkupEditModal({
   isOpen,
   setIsModalOpen,
   onDelete,
-  //   tags,
+  //   existingTags,
   location,
 }) {
   if (!isOpen) return null;
   const [tags, setTags] = useState([
-    { color: "red", name: "Important" },
-    { color: "blue", name: "Albastrea" },
-    { color: "gold", name: "Smecherie" },
-    { color: "red", name: "KFC" },
+    //vom inlocui cu fetchAllTags
+    { _id: 1, color: "red", name: "Important" },
+    { _id: 2, color: "blue", name: "Albastrea" },
+    { _id: 3, color: "gold", name: "Smecherie" },
+    { _id: 4, color: "red", name: "KFC" },
+  ]);
+  const [existingTags, setExistingTags] = useState([
+    //vor fi cele date ca parametru acestei componente MarkupEditModal
+    { _id: 3, color: "gold", name: "Smecherie" },
+    { _id: 4, color: "red", name: "KFC" },
   ]);
   const ref = useRef();
 
@@ -39,7 +47,7 @@ export default function MarkupEditModal({
           //   }
         }}
       ></div>
-      <div className="fixed flex items-center justify-center border-green-400 border-2 backdrop-blur-sm bg-green-50/90 w-[600px] h-[500px] z-[10002] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+      <div className="fixed flex items-center justify-center border-green-400 border-2 backdrop-blur-sm bg-green-50/90 w-[600px] max-h-[600px] z-[10002] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div
           ref={ref}
           className="bg-green-50/40 p-6 shadow-xl w-full h-full z-[10002]"
@@ -50,6 +58,7 @@ export default function MarkupEditModal({
           >
             <X size={20} />
           </button>
+
           <div className="flex flex-col items-center">
             <h3 className="text-2xl font-semibold mb-4 text-green-900/50">
               Location
@@ -63,27 +72,31 @@ export default function MarkupEditModal({
             <h3 className="text-2xl font-semibold mt-3 text-green-900/50 mb-4">
               Tags
             </h3>
-            <Listbox>
-              {tags.map((tag, idx) => {
-                const [{ colorInside, colorOutside }] =
-                  markerColorsArray.filter((c) => c.name === tag.color);
-                return (
-                  <ListboxItem
-                    key={`${tag.name}`}
+            <div className="space-y-4 mt-4">
+              {/* Tag List */}
+              <div className="flex flex-wrap gap-2 items-center">
+                {tags.map((tag) => (
+                  <Chip
+                    key={tag._id}
+                    onClose={() => deleteTag(tag.id)}
+                    className="px-2 py-1"
                     startContent={
-                      <CircleSmall
-                        size={12}
-                        // style={{ stroke: colorOutside, fill: colorInside }}
-                        color={colorOutside}
-                        fill={colorInside}
+                      <span
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: tag.color }}
                       />
                     }
                   >
                     {tag.name}
-                  </ListboxItem>
-                );
-              })}
-            </Listbox>
+                  </Chip>
+                ))}
+              </div>
+            </div>
+            <AddNewTagComponent
+              tags={tags}
+              locationId={location._id}
+              existingTags={existingTags}
+            />
           </div>
         </div>
       </div>
