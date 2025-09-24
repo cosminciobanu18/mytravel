@@ -37,7 +37,7 @@ export default function MarkupEditModal({
 
   return ReactDOM.createPortal(
     <>
-      <div
+      <div //modal overlay
         className={`fixed inset-0 w-full h-full backdrop-blur-sm bg-white-50/40 z-[10001] ${
           isOpen ? "" : "hidden"
         }`}
@@ -47,7 +47,7 @@ export default function MarkupEditModal({
           //   }
         }}
       ></div>
-      <div className="fixed flex items-center justify-center border-green-400 border-2 backdrop-blur-sm bg-green-50/90 w-[600px] max-h-[600px] z-[10002] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+      <div className="fixed flex items-center justify-center border-green-400 border-2 backdrop-blur-sm bg-green-50/90 w-[600px] min-h-[400px] z-[10002] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div
           ref={ref}
           className="bg-green-50/40 p-6 shadow-xl w-full h-full z-[10002]"
