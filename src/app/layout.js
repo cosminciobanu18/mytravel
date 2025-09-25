@@ -22,9 +22,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-green-50`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-green-50 h-full`}
       >
         <AuthProvider>
           <HeroUIProvider>
