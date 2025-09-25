@@ -72,7 +72,7 @@ export default function MarkupEditModal({
                     >
                       <div className="flex">
                         <span className="inline">{tag.name}</span>
-                        <button className="inline ml-1">
+                        <button className="inline ml-1" onClick={null}>
                           <ArrowUpCircle size={18} fill="#6FCFEE" />
                         </button>
                       </div>

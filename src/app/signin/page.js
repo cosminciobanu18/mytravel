@@ -1,6 +1,8 @@
 "use client";
+import { Button } from "@heroui/react";
 import { signOut, useSession, signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 const SignInPage = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -17,12 +19,22 @@ const SignInPage = () => {
     );
   }
   return (
-    <button
-      onClick={() => signIn("google", { callbackUrl })}
-      className="text-green-600"
-    >
-      Sign in with Google
-    </button>
+    <div className=" bg-green-50 min-h-screen w-full flex items-center justify-center">
+      <Button
+        onPress={() => signIn("google", { callbackUrl })}
+        variant="faded"
+        size="lg"
+        className="text-green-900 font-medium hover:bg-gray-50 rounded-lg border shadow"
+      >
+        <Image
+          src="https://www.svgrepo.com/show/355037/google.svg"
+          alt="Google"
+          width={20}
+          height={20}
+        />
+        <span>Sign in with Google</span>
+      </Button>
+    </div>
   );
 };
 
