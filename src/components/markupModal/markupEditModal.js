@@ -3,7 +3,6 @@ import { CircleSmall, X, ArrowUpCircle } from "lucide-react";
 import { Divider, Chip } from "@heroui/react";
 import ReactDOM from "react-dom";
 import { markerColorsArray } from "@/lib/helpers";
-import GptModal from "./gptModal";
 import AddNewTagComponent from "./addNewTag";
 export default function MarkupEditModal({
   isOpen,
@@ -44,7 +43,9 @@ export default function MarkupEditModal({
             <h3 className="text-2xl font-semibold mb-4 text-green-900/50">
               Location
             </h3>
-            <h3 className="text-4xl font-bold mb-3">{location.name}</h3>
+            <h3 className="text-4xl font-bold mb-3 text-center">
+              {location.name}
+            </h3>
             <h5 className="text-2xl font-semibold mb-2">
               {location.city}, {location.country}
             </h5>

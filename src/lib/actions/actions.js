@@ -30,7 +30,7 @@ export async function createMarkup(markup) {
     await newMarkup.save();
 
     await newMarkup.populate(["user", "location"]);
-    const populatedMarkup = newMarkup.toObject();
+    const populatedMarkup = JSON.parse(JSON.stringify(newMarkup));
 
     return { error: null, populatedMarkup };
   } catch (err) {
@@ -112,5 +112,35 @@ export async function deleteTagFromMarkupId(tagId, markupId) {
     return {};
   } catch (error) {
     throw { error };
+  }
+}
+
+export async function getUserByEmail(email) {
+  try {
+    await DBConnect();
+    const user = await User.findOne({ email });
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    return { error };
+  }
+}
+
+export async function updateUser(fields) {
+  try {
+    await DBConnect();
+    const session = await getServerSession();
+    if (!session) return { error: "No session!" };
+    const allowed = ["name", "location"];
+    const filtered = Object.fromEntries(
+      Object.entries(fields).filter(([key, _]) => allowed.includes(key))
+    );
+    const updated = await User.findOneAndUpdate(
+      { email: session?.user?.email },
+      { $set: filtered },
+      { new: true }
+    );
+    return JSON.parse(JSON.stringify(updated));
+  } catch (error) {
+    return { error: error.message };
   }
 }

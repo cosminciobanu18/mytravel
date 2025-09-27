@@ -9,3 +9,9 @@ export const markerColorsArray = [
   { name: "yellow", colorInside: "#CAC428", colorOutside: "#988F2E" },
   { name: "grey", colorInside: "#7B7B7B", colorOutside: "#6B6B6B" },
 ];
+
+export function countryCodeToEmoji(countryCode) {
+  return countryCode
+    .toUpperCase()
+    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt()));
+}

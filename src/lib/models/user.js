@@ -16,6 +16,9 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    location: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
