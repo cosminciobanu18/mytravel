@@ -15,3 +15,28 @@ export function countryCodeToEmoji(countryCode) {
     .toUpperCase()
     .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt()));
 }
+
+export async function searchCities(query) {
+  if (!query) return [];
+
+  const res = await fetch(
+    `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}`,
+    {
+      headers: {
+        "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
+        "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+      },
+    }
+  );
+
+  const { data: cities } = await res.json();
+
+  return cities.map((city) => ({
+    id: city.id,
+    name: city.name,
+    region: city.region,
+    latlon: [city.latitude, city.longitude],
+    country: city.country,
+    countryCode: city.countryCode,
+  }));
+}

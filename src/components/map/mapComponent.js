@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 const LeafletMap = dynamic(() => import("@/components/map/leafletMap"), {
   ssr: false,
 });
-
+import FilterMarkupsComponent from "@/components/map/filterMarkups";
 import { Divider, Input, Listbox, ListboxItem } from "@heroui/react";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
@@ -154,6 +154,12 @@ export default function MapComponent({ pins, tags }) {
         handleAddNewTag={handleAddNewTag}
         allTags={allTags}
         handleDeleteTag={handleDeleteTag}
+      />
+      <FilterMarkupsComponent
+        markers={markers}
+        setMarkers={setMarkers}
+        tags={tags}
+        className=""
       />
       <div className="max-w-7xl relative mx-auto">
         <div className="absolute top-6 left-6 w-60 z-[10000] bg-white p-3">

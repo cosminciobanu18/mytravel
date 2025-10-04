@@ -19,7 +19,7 @@ export default function EditableTextWrapper({
 
   const handleSave = () => {
     setIsEditing(false);
-    onSave(draft);
+    if (draft !== value) onSave(draft);
   };
 
   return (

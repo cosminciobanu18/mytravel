@@ -41,11 +41,6 @@ export default function EditUesrDataComponent({ userData }) {
           onSave={setName}
         />
         {/* <h4 className="text-xl mb-10">City, Country {emoji} </h4> */}
-        {/* <EditableTextWrapper
-          className="inline"
-          label="From"
-          value={userdata.location}
-        /> */}
 
         <span className="inline">{emoji}</span>
 

@@ -29,7 +29,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-green-50 h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-green-50 min-h-full`}
       >
         <AuthProvider>
           <HeroUIProvider>

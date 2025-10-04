@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@heroui/react": "^2.7.5",
     "autoprefixer": "^10.4.21",
     "framer-motion": "^12.23.12",
