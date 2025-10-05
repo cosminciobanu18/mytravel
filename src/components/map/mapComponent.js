@@ -26,6 +26,14 @@ export default function MapComponent({ pins, tags }) {
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);
   const [isPending, startTransition] = useTransition();
 
+  const [selectedTags, setSelectedTags] = useState([]);
+  const filtered =
+    selectedTags.length === 0
+      ? markers
+      : markers.filter((mark) =>
+          mark?.tags.some((tag) => selectedTags.some((t) => t._id === tag._id))
+        );
+
   const fetchSearchInput = async (query) => {
     const response = await fetch(`/api/search/${query}`);
     if (!response.ok) {
@@ -158,7 +166,9 @@ export default function MapComponent({ pins, tags }) {
       <FilterMarkupsComponent
         markers={markers}
         setMarkers={setMarkers}
-        tags={tags}
+        tags={allTags}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
         className=""
       />
       <div className="max-w-7xl relative mx-auto">
@@ -216,7 +226,8 @@ export default function MapComponent({ pins, tags }) {
         </div>
         <div className="w-full flex justify-center">
           <LeafletMap
-            markers={markers}
+            filtered={filtered}
+            selectedTags={selectedTags}
             setMarkers={setMarkers}
             tempMarker={tempMarker}
             setTempMarker={setTempMarker}

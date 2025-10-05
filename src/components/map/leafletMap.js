@@ -55,7 +55,8 @@ function CenterMap({ coords }) {
   return null;
 }
 export default function LeafletMap({
-  markers,
+  filtered,
+  selectedTags,
   setMarkers,
   tempMarker,
   setTempMarker,
@@ -83,12 +84,22 @@ export default function LeafletMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {(tempMarker ? [...markers, tempMarker] : markers).map(
+      {(tempMarker ? [...filtered, tempMarker] : filtered).map(
         ({ _id, location, tags }) => (
           <Marker
             key={location.place_id}
             position={location.latlon}
-            icon={icons[tags?.[0]?.color ?? "grey"]}
+            icon={
+              icons[
+                tags.length === 0
+                  ? "grey"
+                  : selectedTags.length === 0
+                  ? tags[0].color
+                  : tags.find((t) => selectedTags.some((s) => s._id === t._id))
+                      ?.color
+                // && "grey"
+              ]
+            }
           >
             <Popup className="max-w-40 space-y-1 relative">
               <h5 className="text-lg font-bold ">{location.name}</h5>

@@ -12,10 +12,11 @@ import { useState } from "react";
 export default function FilterMarkupsComponent({
   markers,
   setMarkers,
+  selectedTags,
+  setSelectedTags,
   tags,
   className,
 }) {
-  const [selectedTags, setSelectedTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
   const [query, setQuery] = useState("");
   const filtered =
@@ -29,9 +30,9 @@ export default function FilterMarkupsComponent({
     setSelectedTags((prev) => {
       const awaawa = [...prev, tag];
       console.log({ tag }, { awaawa });
-      setSelectedTag(null);
       return awaawa;
     });
+    setSelectedTag(null);
     setQuery("");
   };
 
