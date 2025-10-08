@@ -40,3 +40,16 @@ export async function searchCities(query) {
     countryCode: city.countryCode,
   }));
 }
+
+export function organizedVisited(markups) {
+  const org = {};
+  for (const markup of markups) {
+    org[markup.location.country] ??= {};
+    org[markup.location.country][markup.location.city] ??= [];
+    // if (!org[markup.location["country"]]) org[markup.location["country"]]
+    const ref = org[markup.location["country"]][markup.location["city"]];
+    if (!ref) org[markup.location["country"]][markup.location["city"]] = [];
+    else ref.push(markup);
+  }
+  return org;
+}

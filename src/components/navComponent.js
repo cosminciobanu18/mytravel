@@ -14,7 +14,7 @@ import {
 } from "@heroui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-export default function NavComponent({ avatarURL }) {
+export default function NavComponent() {
   const { data: session } = useSession();
   console.log(session);
   return (
@@ -50,8 +50,8 @@ export default function NavComponent({ avatarURL }) {
         ) : (
           <Dropdown>
             <DropdownTrigger>
-              <Avatar as="button" src={avatarURL}>
-                A
+              <Avatar as="button" src={session?.user?.image}>
+                {session?.user?.name}
               </Avatar>
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions">

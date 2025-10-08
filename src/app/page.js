@@ -6,7 +6,7 @@ export default async function Home() {
   console.log({ pins });
   return (
     // add top padding so child margins don't collapse out of the green background
-    <div className="relative py-20 min-h-full">
+    <div className="relative pt-8 pb-20 min-h-full">
       <MapComponent pins={pins} tags={tags} />
     </div>
   );

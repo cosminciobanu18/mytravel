@@ -33,7 +33,7 @@ export default async function RootLayout({ children }) {
       >
         <AuthProvider>
           <HeroUIProvider>
-            <NavComponent avatarURL={user?.avatar} />
+            <NavComponent />
             {children}
             <ToastContainer />
           </HeroUIProvider>

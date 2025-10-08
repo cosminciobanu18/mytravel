@@ -40,23 +40,20 @@ const options = {
       console.log("signIn", { user });
       return true;
     },
-    // ,
-    // async jwt({ token, user }) {
-    //   console.log("jwt", { token }, { user });
-    //   if (user) token.id = user.id;
-    //   return token;
-    // },
-    // async session({ session, token }) {
-    //   console.log("Session", { session }, { token });
-    //   session.user.id = token.id;
-    //   return {
-    //     ...session,
-    //     user: {
-    //       ...session.user,
-    //       id: token.id,
-    //     },
-    //   };
-    // },
+
+    async jwt({ token, user }) {
+      console.log("jwt", { token }, { user });
+      if (user) token.id = user.id;
+      return token;
+    },
+    async session({ session, token }) {
+      await DBConnect();
+      const dbUser = await User.findOne({ email: session.user.email });
+      console.log("Session", { session }, { token });
+      session.user.id = token.id;
+      session.user.image = dbUser.avatar;
+      return session;
+    },
   },
   pages: {
     signIn: "/signin",
