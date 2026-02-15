@@ -3,7 +3,6 @@ import {
   Button,
   Navbar,
   NavbarBrand,
-  Avatar,
   NavbarContent,
   NavbarItem,
   DropdownTrigger,
@@ -14,38 +13,29 @@ import {
 } from "@heroui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 export default function NavComponent() {
   const { data: session } = useSession();
-  console.log(session);
   const [avatarUrl, setAvatarUrl] = useState(null);
   useEffect(() => {
     setAvatarUrl(session?.user?.image);
-  }, [session]);
+  }, [session?.user?.image]);
   return (
-    <Navbar className="text-bold bg-green-100" isBordered shouldHideOnScroll>
-      <NavbarBrand className="text-3xl" as={Link} href="/">
-        MyTravel
-      </NavbarBrand>
-      <NavbarContent className="text-2xl gap-12" justify="center">
-        <NavbarItem
+    <Navbar
+      className="text-bold bg-green-100 p-1"
+      isBordered
+      shouldHideOnScroll
+    >
+      <NavbarContent justify="start"></NavbarContent>
+      <NavbarContent justify="center">
+        <NavbarBrand
+          className="text-4xl font-semibold tracking-tight"
           as={Link}
           href="/"
-          color="default"
-          variant="shadow"
-          className="text-green-900 text-2xl"
         >
-          Search People
-        </NavbarItem>
-        <NavbarItem
-          as={Link}
-          href="/friends"
-          color="default"
-          variant="shadow"
-          className=" text-green-900 text-2xl"
-        >
-          Friends
-        </NavbarItem>
+          MyTravel
+        </NavbarBrand>
       </NavbarContent>
       <NavbarContent justify="end">
         {!session ? (
@@ -55,9 +45,21 @@ export default function NavComponent() {
         ) : (
           <Dropdown>
             <DropdownTrigger>
-              <Avatar as="button" src={avatarUrl}>
-                {session?.user?.name}
-              </Avatar>
+              <button className="rounded-full overflow-hidden w-10 h-10">
+                {avatarUrl ? (
+                  <Image
+                    src={avatarUrl}
+                    alt={session?.user?.name || "Avatar"}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <span className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full text-sm font-bold">
+                    {session?.user?.name?.[0]}
+                  </span>
+                )}
+              </button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions">
               {session && (
