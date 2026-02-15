@@ -14,9 +14,14 @@ import {
 } from "@heroui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 export default function NavComponent() {
   const { data: session } = useSession();
   console.log(session);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  useEffect(() => {
+    setAvatarUrl(session?.user?.image);
+  }, [session]);
   return (
     <Navbar className="text-bold bg-green-100" isBordered shouldHideOnScroll>
       <NavbarBrand className="text-3xl" as={Link} href="/">
@@ -50,7 +55,7 @@ export default function NavComponent() {
         ) : (
           <Dropdown>
             <DropdownTrigger>
-              <Avatar as="button" src={session?.user?.image}>
+              <Avatar as="button" src={avatarUrl}>
                 {session?.user?.name}
               </Avatar>
             </DropdownTrigger>

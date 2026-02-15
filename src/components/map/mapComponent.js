@@ -31,7 +31,7 @@ export default function MapComponent({ pins, tags }) {
     selectedTags.length === 0
       ? markers
       : markers.filter((mark) =>
-          mark?.tags.some((tag) => selectedTags.some((t) => t._id === tag._id))
+          mark?.tags.some((tag) => selectedTags.some((t) => t._id === tag._id)),
         );
 
   const fetchSearchInput = async (query) => {
@@ -104,7 +104,7 @@ export default function MapComponent({ pins, tags }) {
             tags: [...mark.tags, newTag],
           };
         else return mark;
-      })
+      }),
     );
   };
 
@@ -135,8 +135,8 @@ export default function MapComponent({ pins, tags }) {
       const newModalTags = prev.filter((t) => t._id !== tagId);
       setMarkers((prev) =>
         prev.map((mark) =>
-          mark._id === modalMarkupId ? { ...mark, tags: newModalTags } : mark
-        )
+          mark._id === modalMarkupId ? { ...mark, tags: newModalTags } : mark,
+        ),
       );
       return newModalTags;
     });
@@ -203,7 +203,7 @@ export default function MapComponent({ pins, tags }) {
             {error ?? null}
             {!isPending && searchResults && !error && (
               <Listbox className="max-h-[600px] overflow-scroll">
-                {searchResults.map((loc) => (
+                {searchResults?.map((loc) => (
                   <ListboxItem
                     className="mt-4"
                     key={loc.place_id}
