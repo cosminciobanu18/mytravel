@@ -26,7 +26,7 @@ export async function searchCities(query) {
         "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
         "x-rapidapi-key": process.env.RAPIDAPI_KEY,
       },
-    }
+    },
   );
 
   const { data: cities } = await res.json();
@@ -44,12 +44,14 @@ export async function searchCities(query) {
 export function organizedVisited(markups) {
   const org = {};
   for (const markup of markups) {
-    org[markup.location.country] ??= {};
-    org[markup.location.country][markup.location.city] ??= [];
-    // if (!org[markup.location["country"]]) org[markup.location["country"]]
-    const ref = org[markup.location["country"]][markup.location["city"]];
-    if (!ref) org[markup.location["country"]][markup.location["city"]] = [];
-    else ref.push(markup);
+    if (markup.tags.map((m) => m.name.toLowerCase()).includes("visited")) {
+      org[markup.location.country] ??= {};
+      org[markup.location.country][markup.location.city] ??= [];
+      // if (!org[markup.location["country"]]) org[markup.location["country"]]
+      const ref = org[markup.location["country"]][markup.location["city"]];
+      if (!ref) org[markup.location["country"]][markup.location["city"]] = [];
+      else ref.push(markup);
+    }
   }
   return org;
 }

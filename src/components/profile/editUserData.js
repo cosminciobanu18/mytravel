@@ -8,7 +8,7 @@ import EditableTextWrapper from "@/components/editableText";
 import { updateUser } from "@/lib/actions/actions";
 import { toast } from "react-toastify";
 
-export default function EditUesrDataComponent({ userData }) {
+export default function EditUesrDataComponent({ userData, noCountries }) {
   const [userdata, setUserdata] = useState(userData);
   const emoji = countryCodeToEmoji("RO");
   const setName = async (val) => {
@@ -44,7 +44,7 @@ export default function EditUesrDataComponent({ userData }) {
 
         <span className="inline">{emoji}</span>
 
-        <h4 className="text-xl">You visited 3 countries</h4>
+        <h4 className="text-xl">You visited {noCountries} countries</h4>
       </div>
     </div>
   );

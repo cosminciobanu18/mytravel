@@ -89,7 +89,7 @@ export async function addTagToMarkupId(tag, markupId) {
     const dbMarkup = await Markup.findByIdAndUpdate(
       markupId,
       { $push: { tags: tag._id } },
-      { new: true }
+      { new: true },
     ).populate(["tags", "user", "location"]);
     console.log(dbMarkup);
     return JSON.parse(JSON.stringify(dbMarkup));
@@ -106,7 +106,7 @@ export async function deleteTagFromMarkupId(tagId, markupId) {
     const markup = await Markup.findById(markupId).populate("tags");
     markup.tags.splice(
       markup.tags.findIndex((t) => t._id.toString() === tagId),
-      1
+      1,
     );
     markup.save();
     return {};
@@ -132,12 +132,12 @@ export async function updateUser(fields) {
     if (!session) return { error: "No session!" };
     const allowed = ["name", "location"];
     const filtered = Object.fromEntries(
-      Object.entries(fields).filter(([key, _]) => allowed.includes(key))
+      Object.entries(fields).filter(([key, _]) => allowed.includes(key)),
     );
     const updated = await User.findOneAndUpdate(
       { email: session?.user?.email },
       { $set: filtered },
-      { new: true }
+      { new: true },
     );
     return JSON.parse(JSON.stringify(updated));
   } catch (error) {

@@ -101,7 +101,7 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
         const cities = country.cities
           .map((city) => {
             const locations = city.locations.filter((l) =>
-              l.name.toLowerCase().includes(q)
+              l.name.toLowerCase().includes(q),
             );
             if (city.city.toLowerCase().includes(q) || locations.length > 0)
               return { ...city, locations };
@@ -146,34 +146,34 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
     });
   };
 
-  const onMarkerClick = (p) => {
-    setHighlighted(p);
-    // expand corresponding country and city in the list
-    setExpandedCountries((s) => new Set(s).add(p.country));
-    setExpandedCities((s) => new Set(s).add(`${p.country}||${p.city}`));
-    // scroll list into view (best-effort)
-    const el = document.getElementById(`place-${p.id}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
+  // const onMarkerClick = (p) => {
+  //   setHighlighted(p);
+  //   // expand corresponding country and city in the list
+  //   setExpandedCountries((s) => new Set(s).add(p.country));
+  //   setExpandedCities((s) => new Set(s).add(`${p.country}||${p.city}`));
+  //   // scroll list into view (best-effort)
+  //   const el = document.getElementById(`place-${p.id}`);
+  //   if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  // };
 
-  // Quick utility to add a place (toy example)
-  const addPlace = ({ country, countryCode, city, id, name, lat, lng }) => {
-    setData((d) => {
-      const copy = JSON.parse(JSON.stringify(d));
-      let c = copy.find((x) => x.country === country);
-      if (!c) {
-        c = { country, countryCode: countryCode || "", cities: [] };
-        copy.push(c);
-      }
-      let ct = c.cities.find((x) => x.city === city);
-      if (!ct) {
-        ct = { city, locations: [] };
-        c.cities.push(ct);
-      }
-      ct.locations.push({ id, name, lat, lng });
-      return copy;
-    });
-  };
+  // // Quick utility to add a place (toy example)
+  // const addPlace = ({ country, countryCode, city, id, name, lat, lng }) => {
+  //   setData((d) => {
+  //     const copy = JSON.parse(JSON.stringify(d));
+  //     let c = copy.find((x) => x.country === country);
+  //     if (!c) {
+  //       c = { country, countryCode: countryCode || "", cities: [] };
+  //       copy.push(c);
+  //     }
+  //     let ct = c.cities.find((x) => x.city === city);
+  //     if (!ct) {
+  //       ct = { city, locations: [] };
+  //       c.cities.push(ct);
+  //     }
+  //     ct.locations.push({ id, name, lat, lng });
+  //     return copy;
+  //   });
+  // };
 
   return (
     <div className="bg-gray-50 text-gray-900 p-6 w-full">
@@ -292,25 +292,25 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
                                           // quick delete (confirmation) - destructive action
                                           if (
                                             !confirm(
-                                              `Delete ${loc.name}? This is permanent in this demo.`
+                                              `Delete ${loc.name}? This is permanent in this demo.`,
                                             )
                                           )
                                             return;
                                           setData((d) => {
                                             const copy = JSON.parse(
-                                              JSON.stringify(d)
+                                              JSON.stringify(d),
                                             );
                                             const c = copy.find(
                                               (x) =>
-                                                x.country === country.country
+                                                x.country === country.country,
                                             );
                                             if (!c) return d;
                                             const ct = c.cities.find(
-                                              (x) => x.city === city.city
+                                              (x) => x.city === city.city,
                                             );
                                             if (!ct) return d;
                                             ct.locations = ct.locations.filter(
-                                              (l) => l.id !== loc.id
+                                              (l) => l.id !== loc.id,
                                             );
                                             return copy;
                                           });
