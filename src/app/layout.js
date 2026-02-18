@@ -23,9 +23,9 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await getServerSession();
-  let user = {};
-  if (session?.user?.email) user = await getUserByEmail(session?.user?.email);
+  // const session = await getServerSession();
+  // let user = {};
+  // if (session?.user?.email) user = await getUserByEmail(session?.user?.email);
   return (
     <html lang="en" className="h-full">
       <body

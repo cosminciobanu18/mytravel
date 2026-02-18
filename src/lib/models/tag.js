@@ -4,8 +4,6 @@ const TagSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
-    index: true,
   },
   color: {
     type: String,
@@ -17,5 +15,7 @@ const TagSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+TagSchema.index({ owner: 1, name: 1 }, { unique: true });
 
 export default mongoose.models.Tag || mongoose.model("Tag", TagSchema);

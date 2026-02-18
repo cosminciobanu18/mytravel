@@ -4,8 +4,8 @@ const LeafletMap = dynamic(() => import("@/components/map/leafletMap"), {
   ssr: false,
 });
 import FilterMarkupsComponent from "@/components/map/filterMarkups";
-import { Divider, Input, Listbox, ListboxItem, modal } from "@heroui/react";
-import { useActionState, useEffect, useState, useTransition } from "react";
+import { Divider, Input, Listbox, ListboxItem } from "@heroui/react";
+import { useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
 import {
   addTagToMarkupId,

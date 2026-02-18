@@ -2,6 +2,8 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import DBConnect from "@/lib/db";
 import User from "@/lib/models/user";
+import Tag from "@/lib/models/tag";
+import { Result } from "postcss";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -23,6 +25,7 @@ const options = {
       }
 
       await DBConnect();
+
       const userFromDB = await User.findOneAndUpdate(
         { email: profile?.email },
         {
@@ -33,11 +36,21 @@ const options = {
             createdAt: new Date(),
           },
         },
-        { upsert: true, new: true }
+        { upsert: true, new: true, includeResultMetadata: true },
       );
 
-      user.id = userFromDB._id.toString();
+      if (!userFromDB.lastErrorObject.updatedExisting)
+        await Tag.create({
+          name: "Visited",
+          color: "green",
+          owner: userFromDB.value._id,
+        });
+
+      user.id = userFromDB.value._id.toString();
       console.log("signIn", { user });
+      console.log("-------------------");
+      console.log({ amCreat: !userFromDB.lastErrorObject.updatedExisting });
+      console.log("----------------------------------------------");
       return true;
     },
 
