@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { CircleSmall, X, ArrowUpCircle } from "lucide-react";
+import { CircleSmall, X, ArrowUpCircle, Trash, Trash2 } from "lucide-react";
 import { Divider, Chip } from "@heroui/react";
 import ReactDOM from "react-dom";
 import { markerColorsArray } from "@/lib/helpers";
@@ -8,6 +8,7 @@ export default function MarkupEditModal({
   isOpen,
   setIsModalOpen,
   handleDeleteTag,
+  handleDeleteOpenedMarkup,
   existingTags,
   location,
   handleAddExistingTag,
@@ -33,12 +34,14 @@ export default function MarkupEditModal({
           ref={ref}
           className="bg-green-50/40 p-6 shadow-xl w-full h-full z-[10002]"
         >
-          <button
-            className="absolute top-6 right-6"
-            onClick={() => setIsModalOpen(false)}
-          >
-            <X size={20} />
-          </button>
+          <div className="absolute top-6 right-6 flex justify-between gap-x-8">
+            <button className="text-red-600" onClick={handleDeleteOpenedMarkup}>
+              <Trash2 size={20} />
+            </button>
+            <button onClick={() => setIsModalOpen(false)}>
+              <X size={20} />
+            </button>
+          </div>
 
           <div className="flex flex-col items-center">
             <h3 className="text-2xl font-semibold mb-4 text-green-900/50">

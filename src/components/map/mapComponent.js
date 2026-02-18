@@ -13,6 +13,7 @@ import {
   searchLocation,
   deleteTagFromMarkupId,
   moveTagUp,
+  deleteMarkupById,
 } from "@/lib/actions/actions";
 import MarkupEditModal from "@/components/markupModal/markupEditModal";
 import { toast } from "react-toastify";
@@ -181,6 +182,24 @@ export default function MapComponent({ pins, tags }) {
       console.warn("Eroare:", e);
     }
   };
+
+  const handleDeleteOpenedMarkup = async () => {
+    if (!confirm("Delete this markup? This action is permanent!")) return;
+    const markupsBackup = markers;
+    const deletedId = modalMarkupId;
+    setMarkers((prev) => prev.filter((mark) => mark._id !== modalMarkupId));
+    setModalMarkupId(null);
+    try {
+      setIsModalOpen(false);
+      await deleteMarkupById(deletedId);
+      toast.success("Markup deleted successfully", { position: "top-center" });
+    } catch (e) {
+      setMarkers(markupsBackup);
+      toast.error("Error deleting markup", { position: "top-center" });
+      console.error("Eroare", e);
+    }
+  };
+
   return (
     <>
       <MarkupEditModal
@@ -193,6 +212,7 @@ export default function MapComponent({ pins, tags }) {
         allTags={allTags}
         handleDeleteTag={handleDeleteTag}
         handleMoveTagUp={handleMoveTagUp}
+        handleDeleteOpenedMarkup={handleDeleteOpenedMarkup}
       />
       <FilterMarkupsComponent
         markers={markers}

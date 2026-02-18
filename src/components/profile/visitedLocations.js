@@ -161,7 +161,7 @@ export default function VisitedPlacesPage({ markups }) {
                                         onClick={() => {
                                           if (
                                             !confirm(
-                                              `Delete ${loc.name}? This change is permanent.`,
+                                              "Delete this markup? This action is permanent!",
                                             )
                                           )
                                             return;
