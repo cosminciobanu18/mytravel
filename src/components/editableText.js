@@ -36,7 +36,11 @@ export default function EditableTextWrapper({
             onBlur={() => setIsEditing(false)}
             autoFocus
           />
-          <button type="submit" className="ml-2 align-middle  text-green-500">
+          <button
+            type="submit"
+            className="ml-2 align-middle  text-green-500"
+            onMouseDown={(e) => e.preventDefault()}
+          >
             <Check size={40} /> Save
           </button>
         </form>
