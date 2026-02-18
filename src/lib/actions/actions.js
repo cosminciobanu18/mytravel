@@ -2,12 +2,10 @@
 
 import { getServerSession } from "next-auth";
 import DBConnect from "@/lib/db";
-import { NextResponse } from "next/server";
 import Location from "@/lib/models/location";
 import User from "@/lib/models/user";
 import Tag from "@/lib/models/tag";
 import Markup from "@/lib/models/markup";
-import { LetterTextIcon } from "lucide-react";
 
 export async function createMarkup(markup) {
   const session = await getServerSession();
@@ -48,7 +46,6 @@ export async function fetchMarkers() {
     .populate("tags")
     .populate("user")
     .populate("location");
-  console.log({ markups });
   return markups ? JSON.parse(JSON.stringify(markups)) : [];
 }
 
@@ -59,7 +56,6 @@ export async function fetchAllTags() {
   if (!session) return [];
   const user = await User.findOne({ email: session?.user?.email });
   const tags = await Tag.find({ owner: user?._id });
-  console.log({ tags });
   return JSON.parse(JSON.stringify(tags)) ?? [];
 }
 
@@ -87,7 +83,11 @@ export async function moveTagUp(tagId, markupId) {
     await DBConnect();
     const session = await getServerSession();
     if (!session) throw { error: "No session" };
-    const markup = await Markup.findById(markupId).populate(["tags"]);
+    const user = await User.findOne({ email: session?.user?.email });
+    const markup = await Markup.findOne({
+      _id: markupId,
+      user: user._id,
+    }).populate(["tags"]);
     if (!markup) throw { error: "Tag doesn't exist" };
     let index = -1;
     for (let i = 0; i < markup.tags.length; ++i)
@@ -110,12 +110,12 @@ export async function addTagToMarkupId(tag, markupId) {
     await DBConnect();
     const session = await getServerSession();
     if (!session) return;
-    const dbMarkup = await Markup.findByIdAndUpdate(
-      markupId,
+    const user = await User.findOne({ email: session?.user?.email });
+    const dbMarkup = await Markup.findOneAndUpdate(
+      { _id: markupId, user: user._id },
       { $push: { tags: tag._id } },
       { new: true },
     ).populate(["tags", "user", "location"]);
-    console.log(dbMarkup);
     return JSON.parse(JSON.stringify(dbMarkup));
   } catch (e) {
     return { error: e.message };
@@ -127,7 +127,11 @@ export async function deleteTagFromMarkupId(tagId, markupId) {
     await DBConnect();
     const session = await getServerSession();
     if (!session) return;
-    const markup = await Markup.findById(markupId).populate("tags");
+    const user = await User.findOne({ email: session?.user?.email });
+    const markup = await Markup.findOne({
+      _id: markupId,
+      user: user._id,
+    }).populate("tags");
     markup.tags.splice(
       markup.tags.findIndex((t) => t._id.toString() === tagId),
       1,
@@ -154,12 +158,13 @@ export async function updateUser(fields) {
     await DBConnect();
     const session = await getServerSession();
     if (!session) return { error: "No session!" };
+    const user = await User.findOne({ email: session?.user?.email });
     const allowed = ["name", "location"];
     const filtered = Object.fromEntries(
       Object.entries(fields).filter(([key, _]) => allowed.includes(key)),
     );
     const updated = await User.findOneAndUpdate(
-      { email: session?.user?.email },
+      { email: session?.user?.email, _id: user._id },
       { $set: filtered },
       { new: true },
     );
@@ -173,7 +178,11 @@ export async function deleteMarkupById(markupId) {
   await DBConnect();
   const session = await getServerSession();
   if (!session) throw { error: "No session!" };
-  const result = await Markup.findByIdAndDelete(markupId);
+  const user = await User.findOne({ email: session?.user?.email });
+  const result = await Markup.findOneAndDelete({
+    _id: markupId,
+    user: user._id,
+  });
   if (!result) throw { error: "Markup not found" };
   return null;
 }

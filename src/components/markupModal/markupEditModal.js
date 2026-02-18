@@ -62,7 +62,6 @@ export default function MarkupEditModal({
               {/* Tag List */}
               <div className="flex flex-wrap gap-2 items-center">
                 {existingTags?.map((tag) => {
-                  console.log({ existingTags });
                   return (
                     <Chip
                       key={tag._id}

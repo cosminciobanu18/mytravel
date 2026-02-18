@@ -22,7 +22,6 @@ export default function MapComponent({ pins, tags }) {
   const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [markers, setMarkers] = useState(pins);
-  console.log(markers);
   const [allTags, setAllTags] = useState(tags);
   const [tempMarker, setTempMarker] = useState(null);
   const [viewCenter, setViewCenter] = useState([47.15, 27.58]);

@@ -42,7 +42,7 @@ const icons = {};
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
-    }))
+    })),
 );
 
 function CenterMap({ coords }) {
@@ -69,7 +69,6 @@ export default function LeafletMap({
   const [successfulSave, setSuccessfulSave] = useState(null);
   const [isPending, startTransition] = useTransition();
   const { data: session } = useSession();
-  console.log(session);
   const latlng = [47.151726, 27.587914];
   return (
     <MapContainer
@@ -94,10 +93,10 @@ export default function LeafletMap({
                 tags.length === 0
                   ? "grey"
                   : selectedTags.length === 0
-                  ? tags[0].color
-                  : tags.find((t) => selectedTags.some((s) => s._id === t._id))
-                      ?.color
-                // && "grey"
+                    ? tags[0].color
+                    : tags.find((t) =>
+                        selectedTags.some((s) => s._id === t._id),
+                      )?.color
               ]
             }
           >
@@ -124,7 +123,6 @@ export default function LeafletMap({
                       <CircleSmall
                         size={12}
                         className="inline-block my-auto"
-                        // style={{ stroke: colorOutside, fill: colorInside }}
                         color={colorOutside}
                         fill={colorInside}
                       />
@@ -144,7 +142,6 @@ export default function LeafletMap({
                   variant="solid"
                   onPress={async () => {
                     if (!session) {
-                      // console.log("CANNOT ADD TO DB IF NOT LOGGED IN");
                       toast.error("You have to be logged in to save markups!", {
                         position: "top-center",
                       });
@@ -159,7 +156,6 @@ export default function LeafletMap({
                         setTimeout(() => setSuccessfulSave(null), 3000);
                       } else {
                         setSuccessfulSave(res.error);
-                        console.log(res);
                         setTimeout(() => setSuccessfulSave(null), 5000);
                       }
                     });
@@ -193,7 +189,7 @@ export default function LeafletMap({
               )}
             </Popup>
           </Marker>
-        )
+        ),
       )}
       <ZoomControl position="topright" />
       <CenterMap coords={viewCenter} />

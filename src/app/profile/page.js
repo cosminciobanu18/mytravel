@@ -11,7 +11,6 @@ export default async function ProfilePage() {
   if (!session) redirect("/signin");
   const pins = await fetchMarkers();
   const noCountries = Object.entries(organizedVisited(pins)).length;
-  // console.log({ pins, noCountries });
   let userData = {};
   if (session?.user?.email) userData = await getUserByEmail(session.user.email);
   return (

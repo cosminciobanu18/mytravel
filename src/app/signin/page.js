@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@heroui/react";
-import { signOut, useSession, signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 const SignInPage = () => {

@@ -23,13 +23,12 @@ export default function FilterMarkupsComponent({
     query === ""
       ? tags
       : tags.filter((tag) =>
-          tag.name.toLowerCase().includes(query.toLocaleLowerCase())
+          tag.name.toLowerCase().includes(query.toLocaleLowerCase()),
         );
 
   const handleSelectTag = (tag) => {
     setSelectedTags((prev) => {
       const awaawa = [...prev, tag];
-      console.log({ tag }, { awaawa });
       return awaawa;
     });
     setSelectedTag(null);

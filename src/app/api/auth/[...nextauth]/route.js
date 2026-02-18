@@ -47,22 +47,16 @@ const options = {
         });
 
       user.id = userFromDB.value._id.toString();
-      console.log("signIn", { user });
-      console.log("-------------------");
-      console.log({ amCreat: !userFromDB.lastErrorObject.updatedExisting });
-      console.log("----------------------------------------------");
       return true;
     },
 
     async jwt({ token, user }) {
-      console.log("jwt", { token }, { user });
       if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }) {
       await DBConnect();
       const dbUser = await User.findOne({ email: session.user.email });
-      console.log("Session", { session }, { token });
       session.user.id = token.id;
       session.user.image = dbUser.avatar;
       return session;

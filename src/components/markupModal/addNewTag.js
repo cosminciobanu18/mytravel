@@ -14,7 +14,6 @@ export default function AddNewTagComponent({
   const [isFocused, setIsFocused] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const formRef = useRef();
-  console.log({ isCreating });
   const [isPendingE, startTransitionE] = useTransition();
   const [isPendingC, startTransitionC] = useTransition();
 
@@ -132,12 +131,10 @@ export default function AddNewTagComponent({
                 onSelectionChange={setTagColor}
                 renderValue={(items) =>
                   items.map((item) => {
-                    console.log(item);
                     return (
                       <div key={item.key}>
                         <CircleSmall
                           size={12}
-                          // style={{ stroke: colorOutside, fill: colorInside }}
                           color={item.props.startContent.props.color}
                           fill={item.props.startContent.props.fill}
                           className="inline"
@@ -182,7 +179,6 @@ export default function AddNewTagComponent({
                   onPress={async () => {
                     const tagName = query;
                     const color = tagColor.currentKey;
-                    console.log(tagName, color);
                     await handleCreateNewTag({ name: tagName, color });
                   }}
                   className="inline"

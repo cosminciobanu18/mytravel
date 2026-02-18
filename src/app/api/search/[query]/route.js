@@ -15,10 +15,9 @@ export async function GET(request, { params }) {
     }
     const res = await fetch(
       `${"https://nominatim.openstreetmap.org/search?"}q=${encodeURIComponent(
-        query
-      )}&accept-language=en%2Cro&limit=7&addressdetails=1&format=json`
+        query,
+      )}&accept-language=en%2Cro&limit=7&addressdetails=1&format=json`,
     );
-    console.log(res);
     if (!res.ok) return { errors: res?.errors };
     const locationsFound = await res.json();
     cache.set(query, locationsFound);
