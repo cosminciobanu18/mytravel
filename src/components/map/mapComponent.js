@@ -4,7 +4,7 @@ const LeafletMap = dynamic(() => import("@/components/map/leafletMap"), {
   ssr: false,
 });
 import FilterMarkupsComponent from "@/components/map/filterMarkups";
-import { Divider, Input, Listbox, ListboxItem } from "@heroui/react";
+import { Divider, Input, Listbox, ListboxItem, modal } from "@heroui/react";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
 import {
@@ -12,6 +12,7 @@ import {
   createTag,
   searchLocation,
   deleteTagFromMarkupId,
+  moveTagUp,
 } from "@/lib/actions/actions";
 import MarkupEditModal from "@/components/markupModal/markupEditModal";
 import { toast } from "react-toastify";
@@ -142,7 +143,7 @@ export default function MapComponent({ pins, tags }) {
     });
     try {
       await deleteTagFromMarkupId(tagId, modalMarkupId);
-      toast.success;
+      toast.success("Tag deleted successfully", { position: "bottom-center" });
     } catch (e) {
       setMarkers(markersBackup);
       setModalTags(tagsBackup);
@@ -151,6 +152,35 @@ export default function MapComponent({ pins, tags }) {
     }
   };
 
+  const handleMoveTagUp = async (tagId) => {
+    const markersBackup = markers;
+    const tagsBackup = modalTags;
+    let index = -1;
+    setModalTags((prev) => {
+      const newModalTags = modalTags;
+      index = modalTags.map((tag) => tag._id === tagId).indexOf(true);
+      if (index > 0 && index < modalTags.length) {
+        [newModalTags[index - 1], newModalTags[index]] = [
+          newModalTags[index],
+          newModalTags[index - 1],
+        ];
+      }
+      setMarkers((pv) =>
+        pv.map((mark) =>
+          mark._id === modalMarkupId ? { ...mark, tags: newModalTags } : mark,
+        ),
+      );
+      return newModalTags;
+    });
+    try {
+      await moveTagUp(tagId, modalMarkupId);
+    } catch (e) {
+      setMarkers(markersBackup);
+      setModalTags(tagsBackup);
+      toast.error("Error moving tag", { position: "bottom-left" });
+      console.warn("Eroare:", e);
+    }
+  };
   return (
     <>
       <MarkupEditModal
@@ -162,6 +192,7 @@ export default function MapComponent({ pins, tags }) {
         handleAddNewTag={handleAddNewTag}
         allTags={allTags}
         handleDeleteTag={handleDeleteTag}
+        handleMoveTagUp={handleMoveTagUp}
       />
       <FilterMarkupsComponent
         markers={markers}

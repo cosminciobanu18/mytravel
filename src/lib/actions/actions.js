@@ -7,6 +7,7 @@ import Location from "@/lib/models/location";
 import User from "@/lib/models/user";
 import Tag from "@/lib/models/tag";
 import Markup from "@/lib/models/markup";
+import { LetterTextIcon } from "lucide-react";
 
 export async function createMarkup(markup) {
   const session = await getServerSession();
@@ -66,7 +67,7 @@ export async function createTag(tag) {
   try {
     await DBConnect();
     const session = await getServerSession();
-    if (!session) return { error: "No session" };
+    if (!session) throw { error: "No session" };
     const user = await User.findOne({ email: session?.user?.email });
     console.warn({ tag: tag.name, color: tag.color, _id: user._id });
     const newTag = new Tag({
@@ -78,6 +79,29 @@ export async function createTag(tag) {
     return JSON.parse(JSON.stringify(newTag));
   } catch (e) {
     return { error: e.message };
+  }
+}
+
+export async function moveTagUp(tagId, markupId) {
+  try {
+    await DBConnect();
+    const session = await getServerSession();
+    if (!session) throw { error: "No session" };
+    const markup = await Markup.findById(markupId).populate(["tags"]);
+    if (!markup) throw { error: "Tag doesn't exist" };
+    let index = -1;
+    for (let i = 0; i < markup.tags.length; ++i)
+      if (markup.tags[i]._id.toString() === tagId.toString()) index = i;
+    if (index > 0 && index < markup.tags.length) {
+      [markup.tags[index - 1], markup.tags[index]] = [
+        markup.tags[index],
+        markup.tags[index - 1],
+      ];
+    }
+    await markup.save();
+    return JSON.parse(JSON.stringify(markup));
+  } catch (e) {
+    throw e;
   }
 }
 

@@ -3,68 +3,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { organizedVisited } from "@/lib/helpers";
 
-const SAMPLE = [
-  {
-    country: "Spain",
-    countryCode: "ES",
-    cities: [
-      {
-        city: "Barcelona",
-        locations: [
-          {
-            id: "es-bar-1",
-            name: "Sagrada Familia",
-            lat: 41.4036,
-            lng: 2.1744,
-          },
-          { id: "es-bar-2", name: "Park Güell", lat: 41.4145, lng: 2.1527 },
-        ],
-      },
-      {
-        city: "Madrid",
-        locations: [
-          { id: "es-mad-1", name: "Prado Museum", lat: 40.4138, lng: -3.6921 },
-        ],
-      },
-    ],
-  },
-  {
-    country: "Romania",
-    countryCode: "RO",
-    cities: [
-      {
-        city: "Iași",
-        locations: [
-          {
-            id: "ro-ia-1",
-            name: "Palatul Culturii",
-            lat: 47.1585,
-            lng: 27.6014,
-          },
-          { id: "ro-ia-2", name: "Copou Park", lat: 47.177, lng: 27.6 },
-        ],
-      },
-    ],
-  },
-  {
-    country: "United States",
-    countryCode: "US",
-    cities: [
-      {
-        city: "San Francisco",
-        locations: [
-          {
-            id: "us-sf-1",
-            name: "Golden Gate Bridge",
-            lat: 37.8199,
-            lng: -122.4783,
-          },
-        ],
-      },
-    ],
-  },
-];
-
 function flattenPlaces(data) {
   const out = [];
   data.forEach((country) => {

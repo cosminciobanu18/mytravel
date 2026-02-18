@@ -12,10 +12,11 @@ export default function MarkupEditModal({
   location,
   handleAddExistingTag,
   handleAddNewTag,
+  handleMoveTagUp,
   allTags,
 }) {
-  if (!isOpen) return null;
   const ref = useRef();
+  if (!isOpen) return null;
 
   return ReactDOM.createPortal(
     <>
@@ -73,7 +74,10 @@ export default function MarkupEditModal({
                     >
                       <div className="flex">
                         <span className="inline">{tag.name}</span>
-                        <button className="inline ml-1" onClick={null}>
+                        <button
+                          className="inline ml-1"
+                          onClick={() => handleMoveTagUp(tag._id)}
+                        >
                           <ArrowUpCircle size={18} fill="#6FCFEE" />
                         </button>
                       </div>
@@ -84,7 +88,7 @@ export default function MarkupEditModal({
             </div>
             <AddNewTagComponent
               allTags={allTags}
-              locationId={location._id}
+              // locationId={location._id}
               existingTags={existingTags}
               handleAddExistingTag={handleAddExistingTag}
               handleAddNewTag={handleAddNewTag}
@@ -93,6 +97,6 @@ export default function MarkupEditModal({
         </div>
       </div>
     </>,
-    document.body
+    document.body,
   );
 }
