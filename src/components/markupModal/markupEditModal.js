@@ -90,7 +90,6 @@ export default function MarkupEditModal({
             </div>
             <AddNewTagComponent
               allTags={allTags}
-              // locationId={location._id}
               existingTags={existingTags}
               handleAddExistingTag={handleAddExistingTag}
               handleAddNewTag={handleAddNewTag}

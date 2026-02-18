@@ -72,7 +72,7 @@ export default function LeafletMap({
   const latlng = [47.151726, 27.587914];
   return (
     <MapContainer
-      center={latlng} //ar fi misto sa l iau din geolocation api
+      center={latlng}
       zoom={13.5}
       scrollWheelZoom
       style={{ height: "700px", width: "100%" }}

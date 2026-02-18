@@ -155,10 +155,9 @@ export default function MapComponent({ pins, tags }) {
   const handleMoveTagUp = async (tagId) => {
     const markersBackup = markers;
     const tagsBackup = modalTags;
-    let index = -1;
     setModalTags((prev) => {
-      const newModalTags = modalTags;
-      index = modalTags.map((tag) => tag._id === tagId).indexOf(true);
+      const newModalTags = [...prev];
+      const index = modalTags.map((tag) => tag._id === tagId).indexOf(true);
       if (index > 0 && index < modalTags.length) {
         [newModalTags[index - 1], newModalTags[index]] = [
           newModalTags[index],
@@ -232,7 +231,7 @@ export default function MapComponent({ pins, tags }) {
               className="rounded-xl"
               name="query"
             />
-            {/* position the search icon inside the input */}
+
             {!searchResults ? (
               <button className="absolute right-3 top-3" type="submit">
                 <Search size={18} className="text-gray-600" />

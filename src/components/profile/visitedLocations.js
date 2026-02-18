@@ -151,8 +151,6 @@ export default function VisitedPlacesPage({ markups }) {
                                         {loc.location.name}
                                       </div>
                                       <div className="text-xs text-gray-500">
-                                        {/* {loc.lat.toFixed(4)},{" "}
-                                        {loc.lng.toFixed(4)} */}
                                         {loc.location.type}
                                       </div>
                                     </div>

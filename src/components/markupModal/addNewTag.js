@@ -27,15 +27,12 @@ export default function AddNewTagComponent({
   const handleSelect = async (tag) => {
     setQuery("");
     setIsFocused(false);
-    //daca markupul nu are deja tagul selectat, il adaugam la tagurile markupului
-    //adica if !existingTags.contains(await tag.saveToDb() cand e nou || tag cand exista) =>dar el exista
     startTransitionE(async () => {
       await handleAddExistingTag(tag);
     });
   };
 
   const handleCreateNewTag = async ({ name, color }) => {
-    //inca nu l am atribuit la buton
     startTransitionC(async () => {
       await handleAddNewTag({ name, color });
       setIsCreating(false);
@@ -81,10 +78,7 @@ export default function AddNewTagComponent({
                     (existingTag) => existingTag.name === tag.name,
                   );
                   return (
-                    <li
-                      key={tag._id}
-                      // onClick={() => handleSelect(tag)} nu e bun
-                    >
+                    <li key={tag._id}>
                       <button
                         onClick={() => {
                           handleSelect(tag);
