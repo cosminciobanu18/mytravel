@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 export default function EditUesrDataComponent({ userData, noCountries }) {
   const [userdata, setUserdata] = useState(userData);
-  const emoji = countryCodeToEmoji("RO");
+  // const emoji = countryCodeToEmoji("RO");
   const setName = async (val) => {
     const nameCopy = userdata.name;
     setUserdata((prev) => {
@@ -29,7 +29,6 @@ export default function EditUesrDataComponent({ userData, noCountries }) {
       <Avatar
         size="lg"
         src={userdata.avatar}
-        // src="https://stagiipebune.ro/media/cache/c4/33/c43378787eaf940646f7be78c3dd3d8f.png"
         className="inline-block size-60 align-middle"
       />
       <div className="ml-24 inline-block h-60 align-middle">
@@ -40,9 +39,8 @@ export default function EditUesrDataComponent({ userData, noCountries }) {
           size="lg"
           onSave={setName}
         />
-        {/* <h4 className="text-xl mb-10">City, Country {emoji} </h4> */}
 
-        <span className="inline">{emoji}</span>
+        <span className="inline">🌍🏞️</span>
 
         <h4 className="text-xl">You visited {noCountries} countries</h4>
       </div>
