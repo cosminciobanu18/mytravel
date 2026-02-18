@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { organizedVisited } from "@/lib/helpers";
+import { deleteMarkupById } from "@/lib/actions/actions";
+import { toast } from "react-toastify";
 
 function flattenPlaces(data) {
   const out = [];
@@ -20,17 +22,15 @@ function flattenPlaces(data) {
   return out;
 }
 
-export default function VisitedPlacesPage({ markups = SAMPLE }) {
+export default function VisitedPlacesPage({ markups }) {
   const [data, setData] = useState(markups);
   const [expandedCountries, setExpandedCountries] = useState(() => new Set());
   const [expandedCities, setExpandedCities] = useState(() => new Set());
   const [query, setQuery] = useState("");
   const [highlighted, setHighlighted] = useState(null);
 
-  //   const places = useMemo(() => flattenPlaces(data), [data]);
   const places = organizedVisited(data);
 
-  // Filtered view based on search query (searches country/city/location)
   const filteredData = useMemo(() => {
     if (!query.trim()) return data;
     const q = query.toLowerCase();
@@ -53,19 +53,6 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
       .filter(Boolean);
   }, [data, query]);
 
-  //   const visiblePlaces = useMemo(
-  //     () => flattenPlaces(filteredData),
-  //     [filteredData]
-  //   );
-
-  //   const mapCenter = useMemo(() => {
-  //     if (highlighted) return [highlighted.lat, highlighted.lng];
-  //     if (visiblePlaces.length)
-  //       return [visiblePlaces[0].lat, visiblePlaces[0].lng];
-  //     return [20, 0];
-  //   }, [highlighted, visiblePlaces]);
-
-  // Toggle helpers
   const toggleCountry = (country) => {
     setExpandedCountries((prev) => {
       const n = new Set(prev);
@@ -84,51 +71,22 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
     });
   };
 
-  // const onMarkerClick = (p) => {
-  //   setHighlighted(p);
-  //   // expand corresponding country and city in the list
-  //   setExpandedCountries((s) => new Set(s).add(p.country));
-  //   setExpandedCities((s) => new Set(s).add(`${p.country}||${p.city}`));
-  //   // scroll list into view (best-effort)
-  //   const el = document.getElementById(`place-${p.id}`);
-  //   if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  // };
-
-  // // Quick utility to add a place (toy example)
-  // const addPlace = ({ country, countryCode, city, id, name, lat, lng }) => {
-  //   setData((d) => {
-  //     const copy = JSON.parse(JSON.stringify(d));
-  //     let c = copy.find((x) => x.country === country);
-  //     if (!c) {
-  //       c = { country, countryCode: countryCode || "", cities: [] };
-  //       copy.push(c);
-  //     }
-  //     let ct = c.cities.find((x) => x.city === city);
-  //     if (!ct) {
-  //       ct = { city, locations: [] };
-  //       c.cities.push(ct);
-  //     }
-  //     ct.locations.push({ id, name, lat, lng });
-  //     return copy;
-  //   });
-  // };
+  const handleDeleteMarkup = async (markupId) => {
+    const markersBackup = data;
+    try {
+      setData((prev) => prev.filter((mark) => mark._id !== markupId));
+      await deleteMarkupById(markupId);
+    } catch (e) {
+      setData(markersBackup);
+      toast.error("Eroare stergere markup", { position: "top-center" });
+      console.error(e);
+    }
+  };
 
   return (
     <div className="bg-gray-50 text-gray-900 p-6 w-full">
       <div className="w-full mx-auto">
         <div className="w-full space-y-4">
-          {/* <div className="bg-white p-4 shadow rounded-lg flex items-center gap-4">
-            <div className="flex-1">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search country / city / place..."
-                className="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-sky-400"
-              />
-            </div>
-            
-          </div> */}
-
           <div className="bg-white p-4 shadow rounded-lg w-full">
             <h3 className="font-semibold mb-2">All visited places</h3>
             <div className="space-y-3">
@@ -177,20 +135,6 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
                                     ? "Hide places"
                                     : "Show places"}
                                 </button>
-                                {/* <button
-                                  onClick={() => {
-                                    // center map on first location in city
-                                    if (city.locations[0])
-                                      setHighlighted({
-                                        ...city.locations[0],
-                                        city: city.city,
-                                        country: country.country,
-                                      });
-                                  }}
-                                  className="px-2 py-1 rounded bg-sky-50 text-sky-700 text-sm"
-                                >
-                                  Center
-                                </button> */}
                               </div>
                             </div>
 
@@ -213,45 +157,15 @@ export default function VisitedPlacesPage({ markups = SAMPLE }) {
                                       </div>
                                     </div>
                                     <div className="flex gap-2">
-                                      {/* <button
-                                        onClick={() => {
-                                          setHighlighted({
-                                            ...loc,
-                                            city: city.city,
-                                            country: country.country,
-                                          });
-                                        }}
-                                        className="px-2 py-1 text-sm rounded bg-sky-600 text-white"
-                                      >
-                                        Map
-                                      </button> */}
                                       <button
                                         onClick={() => {
-                                          // quick delete (confirmation) - destructive action
                                           if (
                                             !confirm(
-                                              `Delete ${loc.name}? This is permanent in this demo.`,
+                                              `Delete ${loc.name}? This change is permanent.`,
                                             )
                                           )
                                             return;
-                                          setData((d) => {
-                                            const copy = JSON.parse(
-                                              JSON.stringify(d),
-                                            );
-                                            const c = copy.find(
-                                              (x) =>
-                                                x.country === country.country,
-                                            );
-                                            if (!c) return d;
-                                            const ct = c.cities.find(
-                                              (x) => x.city === city.city,
-                                            );
-                                            if (!ct) return d;
-                                            ct.locations = ct.locations.filter(
-                                              (l) => l.id !== loc.id,
-                                            );
-                                            return copy;
-                                          });
+                                          handleDeleteMarkup(loc._id);
                                         }}
                                         className="px-2 py-1 text-sm rounded bg-red-100 text-red-700"
                                       >

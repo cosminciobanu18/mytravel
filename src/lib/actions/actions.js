@@ -168,3 +168,12 @@ export async function updateUser(fields) {
     return { error: error.message };
   }
 }
+
+export async function deleteMarkupById(markupId) {
+  await DBConnect();
+  const session = await getServerSession();
+  if (!session) throw { error: "No session!" };
+  const result = await Markup.findByIdAndDelete(markupId);
+  if (!result) throw { error: "Markup not found" };
+  return null;
+}
