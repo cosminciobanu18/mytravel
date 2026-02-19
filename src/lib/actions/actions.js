@@ -21,6 +21,11 @@ export async function createMarkup(markup) {
     }
     const dbUser = await User.findOne({ email: session.user.email });
 
+    const userPinsCount = await Markup.countDocuments({ user: dbUser._id });
+    if (userPinsCount >= 400) {
+      return { error: "You reached the max number of pins (400)" };
+    }
+
     const newMarkup = new Markup({
       location: location._id,
       user: dbUser._id,
@@ -65,7 +70,11 @@ export async function createTag(tag) {
     const session = await getServerSession();
     if (!session) return { error: "No session" };
     const user = await User.findOne({ email: session?.user?.email });
-    console.warn({ tag: tag.name, color: tag.color, _id: user._id });
+
+    const userTagsCount = await Tag.countDocuments({ owner: user._id });
+    if (userTagsCount >= 200) {
+      throw new Error("You reached the max number of tags (200)");
+    }
     const newTag = new Tag({
       owner: user._id,
       name: tag.name,

@@ -2,9 +2,9 @@ import { Edit, Check } from "lucide-react";
 import { useState } from "react";
 
 const sizes = {
-  sm: "lg",
-  md: "xl",
-  lg: "3xl",
+  sm: "text-lg",
+  md: "text-xl",
+  lg: "text-3xl",
 };
 
 export default function EditableTextWrapper({
@@ -30,7 +30,7 @@ export default function EditableTextWrapper({
       {isEditing ? (
         <form onSubmit={handleSave} className="">
           <input
-            className={`border px-2 py-1 bg-inherit rounded text-inherit text-${sizes[size]}`}
+            className={`border px-2 py-1 bg-inherit rounded text-inherit ${sizes[size]}`}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onBlur={() => setIsEditing(false)}
@@ -46,7 +46,7 @@ export default function EditableTextWrapper({
         </form>
       ) : (
         <div className="inline-block">
-          <span className={`text-${sizes[size]}`}>{value}</span>
+          <span className={sizes[size]}>{value}</span>
           <button
             className="ml-2 text-blue-500 opacity-0 group-hover:opacity-100 transition"
             onClick={() => setIsEditing(true)}

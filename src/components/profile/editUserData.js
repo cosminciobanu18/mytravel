@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar } from "@heroui/react";
 import { useState } from "react";
+import Image from "next/image";
 import countries from "i18n-iso-countries";
 import { countryCodeToEmoji } from "@/lib/helpers";
 import EditableTextWrapper from "@/components/editableText";
@@ -26,10 +26,12 @@ export default function EditUesrDataComponent({ userData, noCountries }) {
   };
   return (
     <div className="w-full p-12 bg-green-100/40">
-      <Avatar
-        size="lg"
+      <Image
         src={userdata.avatar}
-        className="inline-block size-60 align-middle"
+        alt={userdata.name}
+        width={240}
+        height={240}
+        className="inline-block rounded-full align-middle"
       />
       <div className="ml-24 inline-block h-60 align-middle">
         <EditableTextWrapper
@@ -42,7 +44,7 @@ export default function EditUesrDataComponent({ userData, noCountries }) {
 
         <span className="inline">🌍🏞️</span>
 
-        <h4 className="text-xl">You visited {noCountries} countries</h4>
+        <h4 className="text-xl">You visited {noCountries} countries ✅</h4>
       </div>
     </div>
   );

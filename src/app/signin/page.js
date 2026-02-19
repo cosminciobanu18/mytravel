@@ -3,12 +3,13 @@ import { Button } from "@heroui/react";
 import { useSession, signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useEffect } from "react";
 const SignInPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  if (session && session.user) {
-    router.push("/");
-  }
+  useEffect(() => {
+    if (session?.user) router.push("/");
+  }, [session, router]);
   return (
     <div className="bg-green-50 h-full w-full flex items-center justify-center">
       <Button

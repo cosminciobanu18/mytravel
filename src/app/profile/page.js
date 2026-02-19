@@ -5,6 +5,8 @@ import VisitedPlacesPage from "@/components/profile/visitedLocations";
 import { redirect } from "next/navigation";
 import { fetchMarkers } from "@/lib/actions/actions";
 import { organizedVisited } from "@/lib/helpers";
+
+export const dynamic = "force-dynamic";
 export default async function ProfilePage() {
   const session = await getServerSession();
   console.log(session);

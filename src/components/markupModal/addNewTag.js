@@ -172,8 +172,9 @@ export default function AddNewTagComponent({
                 <Button
                   onPress={async () => {
                     const tagName = query;
-                    const color = tagColor.currentKey;
-                    await handleCreateNewTag({ name: tagName, color });
+                    const color = tagColor?.currentKey;
+                    if (tagName && color)
+                      await handleCreateNewTag({ name: tagName, color });
                   }}
                   className="inline"
                   size="sm"

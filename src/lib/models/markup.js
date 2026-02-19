@@ -15,11 +15,11 @@ const MarkupSchema = new mongoose.Schema(
       type: [{ type: mongoose.Types.ObjectId, ref: "Tag" }],
       validate: [
         validateLength,
-        "{PATH} nu poate avea mai mult de 200 elemente",
+        "{PATH} nu poate avea mai mult de 100 elemente",
       ],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 function validateLength(tags) {
   return tags.length <= 100;
