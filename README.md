@@ -73,5 +73,5 @@ Open [http://localhost:3000](http://localhost:3000) and sign in with Google.
 
 ## 📸 Screenshots
 
-![Filter](screenshots/filter.png)
+![Filter](screenshots/filtered.png)
 ![Profile](screenshots/profile.png)
