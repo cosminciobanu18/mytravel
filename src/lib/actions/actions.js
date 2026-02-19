@@ -63,7 +63,7 @@ export async function createTag(tag) {
   try {
     await DBConnect();
     const session = await getServerSession();
-    if (!session) throw { error: "No session" };
+    if (!session) return { error: "No session" };
     const user = await User.findOne({ email: session?.user?.email });
     console.warn({ tag: tag.name, color: tag.color, _id: user._id });
     const newTag = new Tag({
@@ -74,7 +74,7 @@ export async function createTag(tag) {
     await newTag.save();
     return JSON.parse(JSON.stringify(newTag));
   } catch (e) {
-    return { error: e.message };
+    return { error: e };
   }
 }
 

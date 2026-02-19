@@ -125,6 +125,11 @@ export default function MapComponent({ pins, tags }) {
 
   const handleAddNewTag = async (tag) => {
     const newTag = await createTag(tag);
+    if (newTag?.error) {
+      toast.error("Error creating tag", { position: "bottom-center" });
+      console.warn(newTag);
+      return;
+    }
     setAllTags((prev) => [...prev, newTag]);
     await handleAddExistingTag(newTag);
   };
