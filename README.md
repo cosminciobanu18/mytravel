@@ -1,8 +1,12 @@
 # 🌍 MyTravel
 
-A full-stack travel tracking app with authentication where users pin locations on an interactive map, organize them with custom tags, and keep a visual journal of places they've been.
+> A full-stack travel tracking app with authentication where users pin locations on an interactive map, organize them with custom tags, and keep a visual journal of places they've been.
 
-Built with **Next.js 15**, **React 19**, **MongoDB**, and **Leaflet**.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)
 
 ![Map view](screenshots/home.png)
 
@@ -46,6 +50,7 @@ Try the app yourself: https://mytravel-one.vercel.app/
 - Node.js 18+
 - A MongoDB instance (local or [Atlas](https://www.mongodb.com/atlas))
 - Google OAuth credentials ([console.cloud.google.com](https://console.cloud.google.com/))
+- RapidAPI key for OpenStreetMap Geocoding API (rapidapi.com)
 
 ### Setup
 
@@ -62,6 +67,7 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 NEXTAUTH_SECRET=any-random-string
 NEXTAUTH_URL=http://localhost:3000
+RAPIDAPI_KEY=your-rapidapi-key
 ````
 
 ```bash
@@ -71,7 +77,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) and sign in with Google.
 
-## 📸 Screenshots
+## Screenshots
+| Filter | Profile | 
+|:---:|:---:|
+| ![Filter](screenshots/filtered.png) | ![Profile](screenshots/profile.png) |
 
-![Filter](screenshots/filtered.png)
-![Profile](screenshots/profile.png)
+
