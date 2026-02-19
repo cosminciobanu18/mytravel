@@ -4,8 +4,12 @@ A full-stack travel tracking app with authentication where users pin locations o
 
 Built with **Next.js 15**, **React 19**, **MongoDB**, and **Leaflet**.
 
-<!-- ss
--->
+![Map view](screenshots/home.png)
+
+## Live Demo
+Try the app yourself: https://mytravel-one.vercel.app/
+
+![Add Pin](screenshots/create_pin.gif)
 
 ## Features & Usage
 
@@ -16,9 +20,6 @@ Built with **Next.js 15**, **React 19**, **MongoDB**, and **Leaflet**.
 - **Colored Pins** — Each pin reflects its first tag color for quick visual scanning (the order is adjustable)
 - **Profile Dashboard** — View locations with the _Visited_ tag on your profile organized hierarchically by country → city → place
 - **Location Search** — Find locations by name with Nominatim (OpenStreetMap) geocoding API
-
-<!-- gif
--->
 
 ## Tech Stack
 
@@ -72,5 +73,5 @@ Open [http://localhost:3000](http://localhost:3000) and sign in with Google.
 
 ## 📸 Screenshots
 
-<!-- more screenshots
--->
+![Filter](screenshots/filter.png)
+![Profile](screenshots/profile.png)
